@@ -2,6 +2,7 @@
 
  - The `meta` key is the `cmd` key on macOS and the `windows` key on Windows
  - The `alt` key is the `option` key on macOS and the `alt` key on Windows
+ - All testing for `(in input)` is done in a textarea without any event trigger overwrites (i.e. not the github editor)
 
 | key combo     | firefox mac    | chrome mac    | safari mac   | firefox windows | chrome windows | edge windows
 | ---           | ---            | ---           | ---          | ---             | ---            | ---  
@@ -51,52 +52,52 @@
 | **`meta→.`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→/`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **``meta→` ``** | `switch focus between firefox windows`    | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→a`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→b`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→a`**  | `go to start of line (in input)`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→b`**  | `move caret back (in input)`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→c`**  | **🌳 open**       |**🌳 open**       | **🌳 open**     | `copy`          |`copy`          | `copy`
-| **`ctrl→d`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→e`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→f`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→g`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→h`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→i`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→j`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→k`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→l`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→m`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→n`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→o`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→p`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→q`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→r`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→s`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→t`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→u`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→v`**  | **🌳 open**       | **🌳 open**      | **🌳 open**     | `paste`         | `paste`        | `paste`
-| **`ctrl→w`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→x`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→y`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→z`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→0`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→1`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→2`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→3`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→4`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→5`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→6`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→7`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→8`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→9`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→-`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→=`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→[`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→]`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→;`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→'`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→,`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→.`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→/`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **``ctrl→` ``**  | *unknown*   | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→d`**  | `delete next character (in input)`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→e`**  | `go to end of line (in input)`     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→f`**  | `move caret forward (in input)`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→g`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→h`**  | `delete previous character (in input)`     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→i`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→j`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→k`**  | `delete remainer of line to right of caret (in input)`     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→l`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→m`**  | `mute current tab`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→n`**  | `move caret down (in input)`     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→o`**  | `move caret back (in input)`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→p`**  | `move caret to begining of line (in input)`     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→q`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→r`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→s`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→t`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→u`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→v`**  | **🌳 open**      | **🌳 open**      | **🌳 open**     | `paste`         | `paste`        | `paste`
+| **`ctrl→w`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→x`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→y`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→z`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→0`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→1`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→2`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→3`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→4`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→5`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→6`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→7`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→8`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→9`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→-`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→=`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→[`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→]`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→;`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→'`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→,`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→.`**  | **🌳 open**     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`ctrl→/`**  | **🌳 open**     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **``ctrl→` ``**  | **🌳 open**   | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`alt→a`**  | *unknown*       | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`alt→b`**  | *unknown*       | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`alt→c`**  | *unknown*       | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
