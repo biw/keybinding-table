@@ -6,10 +6,10 @@
 | key combo     | firefox mac    | chrome mac    | safari mac   | firefox windows | chrome windows | edge windows
 | ---           | ---            | ---           | ---          | ---             | ---            | ---  
 | **`meta→a`**  | `select all`   | `select all`  | `select all` | *unknown*       | *unknown*      | *unknown*
-| **`meta→b`**  | `show bookmarks`  | **open**     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→b`**  | `show bookmarks`  | **🌳 open**     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→c`**  | `copy`         | `copy`        | `copy`       | *unknown*       | *unknown*      | *unknown*
 | **`meta→d`**  | `delete current line`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→e`**  | **open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→e`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→f`**  | `find on page`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→g`**  | `find again`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→h`**  | `hide firefox`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
@@ -45,15 +45,15 @@
 | **`meta→=`**  | `zoom in page`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→[`**  | `go to previous page in history`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→]`**  | `go to next page in history`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→;`**  | **open**     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→'`**  | **open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→;`**  | **🌳 open**     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→'`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→,`**  | `open about:preferences`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→.`**  | **open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→/`**  | **open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→.`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→/`**  | **🌳 open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **``meta→` ``** | `switch focus between firefox windows`    | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→a`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→b`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→c`**  | **open**       |**open**       | **open**     | `copy`          |`copy`          | `copy`
+| **`ctrl→c`**  | **🌳 open**       |**🌳 open**       | **🌳 open**     | `copy`          |`copy`          | `copy`
 | **`ctrl→d`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→e`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→f`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
@@ -72,7 +72,7 @@
 | **`ctrl→s`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→t`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→u`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`ctrl→v`**  | **open**       | **open**      | **open**     | `paste`         | `paste`        | `paste`
+| **`ctrl→v`**  | **🌳 open**       | **🌳 open**      | **🌳 open**     | `paste`         | `paste`        | `paste`
 | **`ctrl→w`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→x`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→y`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
