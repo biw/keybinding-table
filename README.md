@@ -43,14 +43,14 @@
 | **`meta→9`**  | `switch to last tab`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→-`**  | `zoom out page`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`meta→=`**  | `zoom in page`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→[`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→]`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→;`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→'`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→,`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→.`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **`meta→/`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
-| **``meta→` ``** | *unknown*    | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→[`**  | `go to previous page in history`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→]`**  | `go to next page in history`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→;`**  | **open**     | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→'`**  | **open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→,`**  | `open about:preferences`      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→.`**  | **open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **`meta→/`**  | **open**      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
+| **``meta→` ``** | `switch focus between firefox windows`    | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→a`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→b`**  | *unknown*      | *unknown*     |*unknown*     | *unknown*       | *unknown*      | *unknown*
 | **`ctrl→c`**  | **open**       |**open**       | **open**     | `copy`          |`copy`          | `copy`
