@@ -26,13 +26,18 @@ on:
           - both
           - caret
           - selection
+      browsers:
+        description: all, or comma-separated browser IDs for the selected platform (safari,chrome,firefox,edge)
+        required: true
+        default: all
+        type: string
 
 permissions:
   contents: read
 
 jobs:
   macos:
-    if: ${{ inputs.platform == 'all' || inputs.platform == 'macos' }}
+    if: ${{ (inputs.platform == 'all' || inputs.platform == 'macos') && (inputs.browsers == 'all' || contains(format(',{0},', inputs.browsers), format(',{0},', matrix.browser))) }}
     name: macOS 26 / ${{ matrix.browser }}
     runs-on: macos-26
     timeout-minutes: 180
@@ -110,7 +115,7 @@ jobs:
           if-no-files-found: error
 
   windows:
-    if: ${{ inputs.platform == 'all' || inputs.platform == 'windows' }}
+    if: ${{ (inputs.platform == 'all' || inputs.platform == 'windows') && (inputs.browsers == 'all' || contains(format(',{0},', inputs.browsers), format(',{0},', matrix.browser))) }}
     name: Windows 11 ARM / ${{ matrix.browser }}
     runs-on: windows-11-arm
     timeout-minutes: 180
