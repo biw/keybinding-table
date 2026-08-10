@@ -299,10 +299,6 @@ def activate_windows_browser(title: str) -> str:
     user32.SetForegroundWindow.restype = wintypes.BOOL
     user32.BringWindowToTop.argtypes = [wintypes.HWND]
     user32.BringWindowToTop.restype = wintypes.BOOL
-    user32.SetActiveWindow.argtypes = [wintypes.HWND]
-    user32.SetActiveWindow.restype = wintypes.HWND
-    user32.SetFocus.argtypes = [wintypes.HWND]
-    user32.SetFocus.restype = wintypes.HWND
     user32.ShowWindow.argtypes = [wintypes.HWND, ctypes.c_int]
     user32.ShowWindow.restype = wintypes.BOOL
     user32.PostMessageW.argtypes = [wintypes.HWND, ctypes.c_uint, wintypes.WPARAM, wintypes.LPARAM]
@@ -372,8 +368,6 @@ def activate_windows_browser(title: str) -> str:
     try:
         user32.ShowWindow(target, 9)  # SW_RESTORE
         user32.BringWindowToTop(target)
-        user32.SetActiveWindow(target)
-        user32.SetFocus(target)
         user32.SetForegroundWindow(target)
     finally:
         for thread in reversed(attached_threads):
@@ -479,12 +473,11 @@ def observation_for_case(
             driver = webdriver_for(platform_name, browser, Path(profile_directory))
             driver.set_page_load_timeout(15)
             driver.get(harness_url)
-            # Chromium's top-level native focus changes can clear renderer
-            # focus. Activate the OS window first, then set the textarea's
-            # focus and test state through WebDriver without injecting a key.
+            driver.find_element("id", "target").click()
+            # Preserve Chromium's renderer focus, then foreground its browser
+            # window without directing focus to the top-level native frame.
             if platform_name == "windows" and not combo.startswith("meta→"):
                 result["foregroundWindow"] = activate_windows_browser(driver.title)
-            driver.find_element("id", "target").click()
             driver.execute_script("window.__keybindingEvidence.setState(arguments[0])", state)
             time.sleep(0.2)
             environment["browserVersion"] = browser_version(driver.capabilities)
