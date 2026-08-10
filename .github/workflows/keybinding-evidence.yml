@@ -78,7 +78,7 @@ jobs:
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
-          pip install --disable-pip-version-check 'selenium>=4.31,<5'
+          pip install --disable-pip-version-check 'selenium>=4.31,<5' 'webdriver-manager>=4,<5'
           swiftc scripts/macos-keypress.swift -o "$RUNNER_TEMP/macos-keypress"
           python scripts/collect_evidence.py \
             --platform macos \
@@ -159,7 +159,7 @@ jobs:
         shell: pwsh
         run: |
           py -3 -m venv .venv
-          .venv\Scripts\python -m pip install --disable-pip-version-check 'selenium>=4.31,<5'
+          .venv\Scripts\python -m pip install --disable-pip-version-check 'selenium>=4.31,<5' 'webdriver-manager>=4,<5'
           .venv\Scripts\python scripts/collect_evidence.py `
             --platform windows `
             --browser '${{ matrix.browser }}' `
