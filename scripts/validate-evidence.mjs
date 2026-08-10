@@ -108,7 +108,10 @@ if (sourceIds.size === 0) errors.push(`no source IDs found in ${sourcesPath}`);
 for (const match of readme.matchAll(/〔([A-Z0-9-]+)〕/g)) {
   if (!sourceIds.has(match[1])) errors.push(`README cites unknown source ID ${match[1]}`);
 }
-if (document.observations.length) {
+// Raw workflow artifacts deliberately contain only the matrix selected for a
+// manual run and do not rewrite README. Citation completeness is enforced on
+// the merged, reviewed evidence document produced by transcribe-evidence.
+if (document.metadata?.workflowRun) {
   for (const line of readme.split('\n')) {
     if (!/^\|\s+\*\*/.test(line)) continue;
     const cells = line.split('|');
