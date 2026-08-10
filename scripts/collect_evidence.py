@@ -484,11 +484,27 @@ def inject_macos(injector: Path, bundle: str, combo: str) -> None:
         raise RuntimeError(message)
 
 
-def activate_macos(injector: Path, bundle: str) -> None:
-    result = run([str(injector), "--bundle", bundle, "--activate"])
+def focus_macos_textarea(injector: Path, bundle: str, driver) -> dict[str, int]:
+    """Activate the browser and focus its renderer with a Quartz mouse click."""
+    geometry = driver.execute_script("""
+      const target = document.querySelector('#target').getBoundingClientRect();
+      return {
+        targetLeft: target.left, targetTop: target.top,
+        targetWidth: target.width, targetHeight: target.height,
+        innerWidth: window.innerWidth, innerHeight: window.innerHeight,
+        outerWidth: window.outerWidth, outerHeight: window.outerHeight
+      };
+    """)
+    window = driver.get_window_rect()
+    chrome_left = (float(geometry["outerWidth"]) - float(geometry["innerWidth"])) / 2
+    chrome_top = float(geometry["outerHeight"]) - float(geometry["innerHeight"])
+    x = round(float(window["x"]) + chrome_left + float(geometry["targetLeft"]) + float(geometry["targetWidth"]) / 2)
+    y = round(float(window["y"]) + chrome_top + float(geometry["targetTop"]) + float(geometry["targetHeight"]) / 2)
+    result = run([str(injector), "--bundle", bundle, "--click", f"{x},{y}"])
     if result.returncode != 0:
-        message = result.stderr.strip() or result.stdout.strip() or "unknown application activation failure"
+        message = result.stderr.strip() or result.stdout.strip() or "unknown Quartz mouse-input failure"
         raise RuntimeError(message)
+    return {"x": x, "y": y}
 
 
 def browser_version(capabilities: dict[str, Any]) -> str:
@@ -576,11 +592,11 @@ def observation_for_case(
             driver = webdriver_for(platform_name, browser, Path(profile_directory))
             driver.set_page_load_timeout(15)
             driver.get(harness_url)
+            driver.find_element("id", "target").click()
             if platform_name == "macos":
                 if mac_injector is None:
                     raise RuntimeError("macOS injector was not supplied")
-                activate_macos(mac_injector, target["bundle"])
-            driver.find_element("id", "target").click()
+                result["nativePointerFocus"] = focus_macos_textarea(mac_injector, target["bundle"], driver)
             # Preserve Chromium's renderer focus, then foreground its browser
             # window without directing focus to the top-level native frame.
             if platform_name == "windows" and not combo.startswith("meta→"):

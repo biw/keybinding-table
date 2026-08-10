@@ -10,7 +10,7 @@ enum KeypressError: Error, LocalizedError {
   var errorDescription: String? {
     switch self {
     case .usage:
-      return "Usage: macos-keypress --bundle <bundle-id> (--activate | --combo <modifier→key>)"
+      return "Usage: macos-keypress --bundle <bundle-id> (--activate | --click <x,y> | --combo <modifier→key>)"
     case let .unsupportedCombo(combo):
       return "Unsupported U.S. ANSI combo: \(combo)"
     case let .applicationNotFound(bundle):
@@ -62,6 +62,22 @@ do {
     exit(0)
   }
 
+  if let point = argument("--click") {
+    let coordinates = point.split(separator: ",").compactMap { Double($0) }
+    guard coordinates.count == 2 else {
+      throw KeypressError.usage
+    }
+    application.activate()
+    usleep(300_000)
+    let location = CGPoint(x: coordinates[0], y: coordinates[1])
+    let source = CGEventSource(stateID: .hidSystemState)!
+    CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: location, mouseButton: .left)!
+      .post(tap: .cghidEventTap)
+    CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: location, mouseButton: .left)!
+      .post(tap: .cghidEventTap)
+    exit(0)
+  }
+
   guard let combo = argument("--combo") else {
     throw KeypressError.usage
   }
@@ -70,9 +86,6 @@ do {
         let modifier = modifiers[pieces[0]],
         let keyCode = keyCodes[pieces[1]] else {
     throw KeypressError.unsupportedCombo(combo)
-  }
-  guard application.isActive else {
-    throw KeypressError.applicationNotFound("foreground application \(bundle)")
   }
   let source = CGEventSource(stateID: .hidSystemState)!
   post(source, code: modifier.code, isDown: true, flags: modifier.flag)
