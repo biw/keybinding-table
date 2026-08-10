@@ -250,6 +250,87 @@ def inject_windows(combo: str) -> None:
         raise RuntimeError(f"SendInput inserted {sent}/4 events (winerror {ctypes.get_last_error()})")
 
 
+def activate_windows_browser(title: str) -> str:
+    """Bring the harness's browser window to the interactive desktop foreground.
+
+    A WebDriver click changes DOM focus, but does not reliably make a headed
+    browser the foreground *OS* window on GitHub's Windows runners. SendInput
+    deliberately follows OS foreground routing, so establish and record that
+    routing before injecting a shortcut.
+    """
+    from ctypes import wintypes
+
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    enum_callback = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+    user32.EnumWindows.argtypes = [enum_callback, wintypes.LPARAM]
+    user32.EnumWindows.restype = wintypes.BOOL
+    user32.IsWindowVisible.argtypes = [wintypes.HWND]
+    user32.IsWindowVisible.restype = wintypes.BOOL
+    user32.GetWindowTextLengthW.argtypes = [wintypes.HWND]
+    user32.GetWindowTextLengthW.restype = ctypes.c_int
+    user32.GetWindowTextW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+    user32.GetWindowTextW.restype = ctypes.c_int
+    user32.GetForegroundWindow.restype = wintypes.HWND
+    user32.SetForegroundWindow.argtypes = [wintypes.HWND]
+    user32.SetForegroundWindow.restype = wintypes.BOOL
+    user32.ShowWindow.argtypes = [wintypes.HWND, ctypes.c_int]
+    user32.ShowWindow.restype = wintypes.BOOL
+    user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+    user32.GetWindowThreadProcessId.restype = wintypes.DWORD
+    user32.AttachThreadInput.argtypes = [wintypes.DWORD, wintypes.DWORD, wintypes.BOOL]
+    user32.AttachThreadInput.restype = wintypes.BOOL
+    kernel32.GetCurrentThreadId.restype = wintypes.DWORD
+
+    def window_title(window: int) -> str:
+        length = user32.GetWindowTextLengthW(window)
+        buffer = ctypes.create_unicode_buffer(length + 1)
+        user32.GetWindowTextW(window, buffer, len(buffer))
+        return buffer.value
+
+    target = None
+    deadline = time.monotonic() + 5
+    while target is None and time.monotonic() < deadline:
+        candidates: list[int] = []
+
+        @enum_callback
+        def collect(window, _):
+            if user32.IsWindowVisible(window) and title in window_title(window):
+                candidates.append(window)
+            return True
+
+        if not user32.EnumWindows(collect, 0):
+            raise RuntimeError(f"EnumWindows failed (winerror {ctypes.get_last_error()})")
+        if candidates:
+            target = candidates[0]
+            break
+        time.sleep(0.1)
+    if target is None:
+        raise RuntimeError(f"Could not find a visible browser window titled {title!r}")
+
+    # The foreground-lock rules permit the active thread's input queue to be
+    # attached temporarily to the foreground queue. This is the least invasive
+    # way to activate the browser; the test never sends synthetic DOM events.
+    foreground = user32.GetForegroundWindow()
+    foreground_thread = user32.GetWindowThreadProcessId(foreground, None) if foreground else 0
+    current_thread = kernel32.GetCurrentThreadId()
+    attached = bool(foreground_thread and foreground_thread != current_thread and
+                    user32.AttachThreadInput(current_thread, foreground_thread, True))
+    try:
+        user32.ShowWindow(target, 9)  # SW_RESTORE
+        user32.SetForegroundWindow(target)
+    finally:
+        if attached:
+            user32.AttachThreadInput(current_thread, foreground_thread, False)
+
+    if user32.GetForegroundWindow() != target:
+        actual = user32.GetForegroundWindow()
+        raise RuntimeError(
+            f"Could not foreground the browser window (foreground title: {window_title(actual)!r})"
+        )
+    return window_title(target)
+
+
 def inject_macos(injector: Path, bundle: str, combo: str) -> None:
     result = run([str(injector), "--bundle", bundle, "--combo", combo])
     if result.returncode != 0:
@@ -355,6 +436,7 @@ def observation_for_case(
                 result["after"] = before
             else:
                 if platform_name == "windows":
+                    result["foregroundWindow"] = activate_windows_browser(driver.title)
                     inject_windows(combo)
                 else:
                     if mac_injector is None:
