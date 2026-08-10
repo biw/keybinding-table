@@ -20,15 +20,22 @@ const targetColumns = [
 ];
 
 function usage() {
-  console.error('usage: transcribe-evidence.mjs --artifact <run URL> observation.json [...] [--artifact <run URL> observation.json ...]');
+  console.error('usage: transcribe-evidence.mjs [--existing evidence/observations.json] --artifact <run URL> observation.json [...] [--artifact <run URL> observation.json ...]');
   process.exit(2);
 }
 
 let currentArtifact;
+let existingPath;
 const inputs = [];
 const allowPartial = process.argv.includes('--allow-partial');
 for (let index = 2; index < process.argv.length; index += 1) {
   if (process.argv[index] === '--allow-partial') continue;
+  if (process.argv[index] === '--existing') {
+    existingPath = process.argv[index + 1];
+    if (!existingPath) usage();
+    index += 1;
+    continue;
+  }
   if (process.argv[index] === '--artifact') {
     currentArtifact = process.argv[index + 1];
     if (!currentArtifact) usage();
@@ -44,10 +51,14 @@ const documents = await Promise.all(inputs.map(async ({ path, artifact }) => ({
   artifact,
   document: JSON.parse(await readFile(path, 'utf8'))
 })));
-const observations = documents.flatMap(({ document, artifact }) => (document.observations ?? []).map((observation) => ({
+const existingDocument = existingPath ? JSON.parse(await readFile(existingPath, 'utf8')) : null;
+const observations = [
+  ...(existingDocument?.observations ?? []),
+  ...documents.flatMap(({ document, artifact }) => (document.observations ?? []).map((observation) => ({
   ...observation,
   artifact: `${artifact} (${observation.artifact})`
-})));
+})))
+];
 if (!observations.length) throw new Error('No observations were supplied.');
 const failures = observations.filter((observation) => observation.result?.kind === 'injector-failure');
 if (failures.length) throw new Error(`Refusing to transcribe ${failures.length} injector failures.`);
@@ -158,7 +169,7 @@ await writeFile(readmePath, `${rewritten.join('\n').replace(/\n+$/, '')}\n`, 'ut
 await writeFile(evidencePath, `${JSON.stringify({
   schemaVersion: 1,
   metadata: {
-    workflowRuns: [...new Set(documents.map(({ artifact }) => artifact))],
+    workflowRuns: [...new Set([...(existingDocument?.metadata?.workflowRuns ?? []), ...documents.map(({ artifact }) => artifact)])],
     completeMatrix: missing.length === 0,
     inputLayout: 'U.S.',
     cleanProfile: true,
