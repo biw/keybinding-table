@@ -354,11 +354,20 @@ def focus_windows_textarea(driver) -> dict[str, int]:
     return {"x": x, "y": y}
 
 
-def inject_windows(combo: str) -> None:
+def inject_windows(combo: str, *, scan_codes: bool) -> None:
     try:
         modifier, key = combo.split("→", maxsplit=1)
-        modifier_code = WINDOWS_MODIFIER_SCAN_CODES[modifier]
-        key_code = WINDOWS_SCAN_CODES[key]
+        if scan_codes:
+            modifier_code = WINDOWS_MODIFIER_SCAN_CODES[modifier]
+            key_code = WINDOWS_SCAN_CODES[key]
+        else:
+            modifier_code = {"ctrl": 0x11, "alt": 0x12, "meta": 0x5B}[modifier]
+            key_code = {
+                **{character: ord(character.upper()) for character in "abcdefghijklmnopqrstuvwxyz"},
+                **{character: ord(character) for character in "0123456789"},
+                ";": 0xBA, "=": 0xBB, ",": 0xBC, "-": 0xBD, ".": 0xBE,
+                "/": 0xBF, "`": 0xC0, "[": 0xDB, "]": 0xDD, "'": 0xDE,
+            }[key]
     except (KeyError, ValueError) as error:
         raise RuntimeError(f"Unsupported Windows U.S. ANSI combo: {combo}") from error
     send_windows_key_events([
@@ -366,7 +375,7 @@ def inject_windows(combo: str) -> None:
         (key_code, False),
         (key_code, True),
         (modifier_code, True),
-    ], scan_codes=True)
+    ], scan_codes=scan_codes)
 
 
 def activate_windows_browser(title: str) -> str:
@@ -601,7 +610,12 @@ def observation_for_case(
             # window without directing focus to the top-level native frame.
             if platform_name == "windows" and not combo.startswith("meta→"):
                 result["foregroundWindow"] = activate_windows_browser(driver.title)
-                result["nativePointerFocus"] = focus_windows_textarea(driver)
+                if browser in {"chrome", "edge"}:
+                    result["nativePointerFocus"] = focus_windows_textarea(driver)
+                    # SendInput is asynchronous relative to the WebDriver
+                    # control channel. Let the real click settle before the
+                    # passive harness resets its sentinel state.
+                    time.sleep(0.2)
             driver.execute_script("window.__keybindingEvidence.setState(arguments[0])", state)
             time.sleep(0.2)
             environment["browserVersion"] = browser_version(driver.capabilities)
@@ -614,8 +628,7 @@ def observation_for_case(
                 result["after"] = before
             else:
                 if platform_name == "windows":
-                    result["foregroundWindow"] = activate_windows_browser(driver.title)
-                    inject_windows(combo)
+                    inject_windows(combo, scan_codes=browser in {"chrome", "edge"})
                 else:
                     if mac_injector is None:
                         raise RuntimeError("macOS injector was not supplied")
