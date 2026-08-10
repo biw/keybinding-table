@@ -64,13 +64,16 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/${{ matrix.browser }}
+          app_version() {
+            /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$1/Contents/Info.plist"
+          }
           {
             sw_vers
             echo "Runner image: ${ImageOS:-unknown}/${ImageVersion:-unknown}"
             defaults read com.apple.HIToolbox AppleSelectedInputSources || echo "U.S. keyboard default (HIToolbox selection unset)"
-            /Applications/Safari.app/Contents/MacOS/Safari --version
-            /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version
-            /Applications/Firefox.app/Contents/MacOS/firefox --version
+            echo "Safari: $(app_version /Applications/Safari.app)"
+            echo "Chrome: $(app_version '/Applications/Google Chrome.app')"
+            echo "Firefox: $(app_version /Applications/Firefox.app)"
           } > artifacts/${{ matrix.browser }}/environment.txt
 
       - name: Collect real-input evidence
