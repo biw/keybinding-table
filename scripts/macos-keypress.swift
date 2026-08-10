@@ -10,7 +10,7 @@ enum KeypressError: Error, LocalizedError {
   var errorDescription: String? {
     switch self {
     case .usage:
-      return "Usage: macos-keypress --bundle <bundle-id> --combo <modifier→key>"
+      return "Usage: macos-keypress --bundle <bundle-id> (--activate | --combo <modifier→key>)"
     case let .unsupportedCombo(combo):
       return "Unsupported U.S. ANSI combo: \(combo)"
     case let .applicationNotFound(bundle):
@@ -49,7 +49,20 @@ func post(_ source: CGEventSource, code: CGKeyCode, isDown: Bool, flags: CGEvent
 }
 
 do {
-  guard let bundle = argument("--bundle"), let combo = argument("--combo") else {
+  guard let bundle = argument("--bundle") else {
+    throw KeypressError.usage
+  }
+  guard let application = NSRunningApplication.runningApplications(withBundleIdentifier: bundle).first else {
+    throw KeypressError.applicationNotFound(bundle)
+  }
+
+  if CommandLine.arguments.contains("--activate") {
+    application.activate()
+    usleep(300_000)
+    exit(0)
+  }
+
+  guard let combo = argument("--combo") else {
     throw KeypressError.usage
   }
   let pieces = combo.split(separator: "→", maxSplits: 1).map(String.init)
@@ -58,12 +71,9 @@ do {
         let keyCode = keyCodes[pieces[1]] else {
     throw KeypressError.unsupportedCombo(combo)
   }
-  guard let application = NSRunningApplication.runningApplications(withBundleIdentifier: bundle).first else {
-    throw KeypressError.applicationNotFound(bundle)
+  guard application.isActive else {
+    throw KeypressError.applicationNotFound("foreground application \(bundle)")
   }
-
-  application.activate()
-  usleep(300_000)
   let source = CGEventSource(stateID: .hidSystemState)!
   post(source, code: modifier.code, isDown: true, flags: modifier.flag)
   post(source, code: keyCode, isDown: true, flags: modifier.flag)

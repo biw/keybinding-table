@@ -388,6 +388,13 @@ def inject_macos(injector: Path, bundle: str, combo: str) -> None:
         raise RuntimeError(message)
 
 
+def activate_macos(injector: Path, bundle: str) -> None:
+    result = run([str(injector), "--bundle", bundle, "--activate"])
+    if result.returncode != 0:
+        message = result.stderr.strip() or result.stdout.strip() or "unknown application activation failure"
+        raise RuntimeError(message)
+
+
 def browser_version(capabilities: dict[str, Any]) -> str:
     value = capabilities.get("browserVersion") or capabilities.get("version")
     return str(value) if value else "unavailable"
@@ -473,6 +480,10 @@ def observation_for_case(
             driver = webdriver_for(platform_name, browser, Path(profile_directory))
             driver.set_page_load_timeout(15)
             driver.get(harness_url)
+            if platform_name == "macos":
+                if mac_injector is None:
+                    raise RuntimeError("macOS injector was not supplied")
+                activate_macos(mac_injector, target["bundle"])
             driver.find_element("id", "target").click()
             # Preserve Chromium's renderer focus, then foreground its browser
             # window without directing focus to the top-level native frame.
