@@ -194,14 +194,8 @@ def webdriver_for(platform_name: str, browser: str, profile: Path):
     raise RuntimeError(f"Unsupported browser {browser} on {platform_name}")
 
 
-def inject_windows(combo: str) -> None:
-    try:
-        modifier, key = combo.split("→", maxsplit=1)
-        modifier_code = WINDOWS_MODIFIERS[modifier]
-        key_code = WINDOWS_KEY_CODES[key]
-    except (KeyError, ValueError) as error:
-        raise RuntimeError(f"Unsupported Windows U.S. ANSI combo: {combo}") from error
-
+def send_windows_key_events(events: list[tuple[int, bool]]) -> None:
+    """Insert physical-key virtual-key events through the Windows input stream."""
     class KEYBDINPUT(ctypes.Structure):
         _fields_ = [
             ("wVk", ctypes.c_ushort),
@@ -250,13 +244,28 @@ def inject_windows(combo: str) -> None:
             ),
         )
 
-    inputs = (INPUT * 4)(event(modifier_code), event(key_code), event(key_code, True), event(modifier_code, True))
+    inputs = (INPUT * len(events))(*(event(code, key_up) for code, key_up in events))
     user32 = ctypes.WinDLL("user32", use_last_error=True)
     user32.SendInput.argtypes = [ctypes.c_uint, ctypes.POINTER(INPUT), ctypes.c_int]
     user32.SendInput.restype = ctypes.c_uint
-    sent = user32.SendInput(4, inputs, ctypes.sizeof(INPUT))
-    if sent != 4:
-        raise RuntimeError(f"SendInput inserted {sent}/4 events (winerror {ctypes.get_last_error()})")
+    sent = user32.SendInput(len(inputs), inputs, ctypes.sizeof(INPUT))
+    if sent != len(inputs):
+        raise RuntimeError(f"SendInput inserted {sent}/{len(inputs)} events (winerror {ctypes.get_last_error()})")
+
+
+def inject_windows(combo: str) -> None:
+    try:
+        modifier, key = combo.split("→", maxsplit=1)
+        modifier_code = WINDOWS_MODIFIERS[modifier]
+        key_code = WINDOWS_KEY_CODES[key]
+    except (KeyError, ValueError) as error:
+        raise RuntimeError(f"Unsupported Windows U.S. ANSI combo: {combo}") from error
+    send_windows_key_events([
+        (modifier_code, False),
+        (key_code, False),
+        (key_code, True),
+        (modifier_code, True),
+    ])
 
 
 def activate_windows_browser(title: str) -> str:
@@ -336,6 +345,12 @@ def activate_windows_browser(title: str) -> str:
         user32.PostMessageW(foreground, 0x0010, 0, 0)  # WM_CLOSE
         time.sleep(0.3)
         foreground = user32.GetForegroundWindow()
+
+    # SetForegroundWindow permits a process that received the last input to
+    # activate its target. A down/up Alt pulse is sent through SendInput (the
+    # same native OS path as the tested key), then no browser behavior is
+    # sampled until foreground ownership is verified below.
+    send_windows_key_events([(0x12, False), (0x12, True)])  # VK_MENU
 
     # The foreground-lock rules permit the active thread's input queue to be
     # attached temporarily to both the existing foreground queue and target
