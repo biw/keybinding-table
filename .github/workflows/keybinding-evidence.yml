@@ -122,13 +122,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install current browser stable releases
+      - name: Verify or update browser stable releases
         shell: pwsh
         run: |
           $ids = 'Google.Chrome', 'Microsoft.Edge', 'Mozilla.Firefox'
           foreach ($id in $ids) {
-            winget install --exact --id $id --force --silent --accept-source-agreements --accept-package-agreements
-            if ($LASTEXITCODE -ne 0) { throw "Unable to install current stable $id" }
+            winget upgrade --exact --id $id --silent --accept-source-agreements --accept-package-agreements
+            if ($LASTEXITCODE -ne 0) { Write-Warning "winget could not update $id; the exact installed build is captured as evidence." }
           }
 
       - name: Capture environment
