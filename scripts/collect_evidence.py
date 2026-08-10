@@ -479,12 +479,12 @@ def observation_for_case(
             driver = webdriver_for(platform_name, browser, Path(profile_directory))
             driver.set_page_load_timeout(15)
             driver.get(harness_url)
-            driver.find_element("id", "target").click()
             # Chromium's top-level native focus changes can clear renderer
             # focus. Activate the OS window first, then set the textarea's
             # focus and test state through WebDriver without injecting a key.
             if platform_name == "windows" and not combo.startswith("meta→"):
                 result["foregroundWindow"] = activate_windows_browser(driver.title)
+            driver.find_element("id", "target").click()
             driver.execute_script("window.__keybindingEvidence.setState(arguments[0])", state)
             time.sleep(0.2)
             environment["browserVersion"] = browser_version(driver.capabilities)
