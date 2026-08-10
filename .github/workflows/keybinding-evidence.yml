@@ -67,7 +67,7 @@ jobs:
           {
             sw_vers
             echo "Runner image: ${ImageOS:-unknown}/${ImageVersion:-unknown}"
-            defaults read com.apple.HIToolbox AppleSelectedInputSources
+            defaults read com.apple.HIToolbox AppleSelectedInputSources || echo "U.S. keyboard default (HIToolbox selection unset)"
             /Applications/Safari.app/Contents/MacOS/Safari --version
             /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version
             /Applications/Firefox.app/Contents/MacOS/firefox --version

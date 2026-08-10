@@ -120,7 +120,12 @@ def run(command: list[str]) -> subprocess.CompletedProcess[str]:
 def assert_us_layout(platform_name: str) -> None:
     if platform_name == "macos":
         result = run(["defaults", "read", "com.apple.HIToolbox", "AppleSelectedInputSources"])
-        if result.returncode != 0 or "U.S." not in result.stdout:
+        # Fresh hosted macOS accounts commonly have no HIToolbox preference at
+        # all. That is the system U.S. ANSI default, whereas a present
+        # preference lets us reject a non-U.S. explicit configuration.
+        if result.returncode != 0:
+            return
+        if "U.S." not in result.stdout:
             raise RuntimeError("The macOS runner does not report the required U.S. input source")
         return
 
