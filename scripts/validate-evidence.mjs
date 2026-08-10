@@ -41,7 +41,8 @@ const [readme, sources, rawObservations] = await Promise.all([
 ]);
 
 const combos = new Set(
-  [...readme.matchAll(/^\|\s+\*\*`([^`]+)`\*\*/gm)].map((match) => match[1])
+  [...readme.matchAll(/^\|\s+\*\*(?:`([^`]+)`|``\s*([^`]+)`\s*``)\*\*/gm)]
+    .map((match) => match[1] ?? `${match[2]}\``)
 );
 const sourceIds = new Set(
   [...sources.matchAll(/^## ([A-Z0-9-]+)$/gm)].map((match) => match[1])

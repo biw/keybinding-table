@@ -90,8 +90,12 @@ def now() -> str:
 
 
 def table_combos(readme: Path) -> list[str]:
-    pattern = re.compile(r"^\|\s+\*\*`([^`]+)`\*\*", re.MULTILINE)
-    combos = pattern.findall(readme.read_text(encoding="utf-8"))
+    # Markdown represents a literal-backtick key as `` modifier→` ``; retain
+    # that row instead of silently narrowing the evidence matrix.
+    pattern = re.compile(r"^\|\s+\*\*(?:`([^`]+)`|``\s*([^`]+)`\s*``)\*\*", re.MULTILINE)
+    combos = [normal or literal_backtick + "`" for normal, literal_backtick in pattern.findall(
+        readme.read_text(encoding="utf-8")
+    )]
     if not combos:
         raise RuntimeError(f"No keybinding rows found in {readme}")
     return combos
