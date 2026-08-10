@@ -326,10 +326,13 @@ def activate_windows_browser(title: str) -> str:
         raise RuntimeError(f"Could not find a visible browser window titled {title!r}")
 
     # GitHub's ARM Windows image can open an unrelated Microsoft-account
-    # onboarding dialog after browser startup. Close only that transient host
-    # dialog; do not dismiss arbitrary application windows.
+    # onboarding dialog and then its Search panel after browser startup. Close
+    # only these known transient host windows; do not dismiss arbitrary app
+    # windows or infer browser behavior while one owns foreground input.
     foreground = user32.GetForegroundWindow()
-    if foreground and window_title(foreground) == "Microsoft account":
+    for _ in range(3):
+        if not foreground or window_title(foreground) not in {"Microsoft account", "Search"}:
+            break
         user32.PostMessageW(foreground, 0x0010, 0, 0)  # WM_CLOSE
         time.sleep(0.3)
         foreground = user32.GetForegroundWindow()
