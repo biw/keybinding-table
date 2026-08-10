@@ -90,6 +90,11 @@ for (const [index, observation] of (document.observations ?? []).entries()) {
   if (typeof observation.artifact !== 'string' || !observation.artifact.trim()) {
     errors.push(`${prefix}: artifact is required`);
   }
+  if (['observed', 'observed-no-effect', 'os-level'].includes(observation.result?.kind)) {
+    if (!observation.result.before || !observation.result.after) {
+      errors.push(`${prefix}: observed result requires before and after state`);
+    }
+  }
   const key = [observation.combo, observation.target, observation.state].join('|');
   if (seen.has(key)) errors.push(`${prefix}: duplicate combo/target/state record`);
   seen.add(key);
@@ -99,6 +104,18 @@ if (combos.size === 0) errors.push(`no keybinding rows found in ${readmePath}`);
 if (sourceIds.size === 0) errors.push(`no source IDs found in ${sourcesPath}`);
 for (const match of readme.matchAll(/〔([A-Z0-9-]+)〕/g)) {
   if (!sourceIds.has(match[1])) errors.push(`README cites unknown source ID ${match[1]}`);
+}
+if (document.observations.length) {
+  for (const line of readme.split('\n')) {
+    if (!/^\|\s+\*\*/.test(line)) continue;
+    const cells = line.split('|');
+    for (const cell of cells.slice(2, -1)) {
+      const value = cell.trim();
+      if (value && value !== '_unknown_' && !/〔[A-Z0-9-]+〕/.test(value)) {
+        errors.push(`completed README cell lacks a source ID: ${value}`);
+      }
+    }
+  }
 }
 if (errors.length) {
   fail(errors);
