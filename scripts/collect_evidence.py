@@ -258,6 +258,102 @@ def send_windows_key_events(events: list[tuple[int, bool]], *, scan_codes: bool 
         raise RuntimeError(f"SendInput inserted {sent}/{len(inputs)} events (winerror {ctypes.get_last_error()})")
 
 
+def inject_windows_click(x: int, y: int) -> None:
+    """Click a screen coordinate through SendInput to establish renderer focus."""
+    class MOUSEINPUT(ctypes.Structure):
+        _fields_ = [
+            ("dx", ctypes.c_long),
+            ("dy", ctypes.c_long),
+            ("mouseData", ctypes.c_ulong),
+            ("dwFlags", ctypes.c_ulong),
+            ("time", ctypes.c_ulong),
+            ("dwExtraInfo", ctypes.c_size_t),
+        ]
+
+    class KEYBDINPUT(ctypes.Structure):
+        _fields_ = [
+            ("wVk", ctypes.c_ushort), ("wScan", ctypes.c_ushort),
+            ("dwFlags", ctypes.c_ulong), ("time", ctypes.c_ulong),
+            ("dwExtraInfo", ctypes.c_size_t),
+        ]
+
+    class HARDWAREINPUT(ctypes.Structure):
+        _fields_ = [("uMsg", ctypes.c_ulong), ("wParamL", ctypes.c_ushort), ("wParamH", ctypes.c_ushort)]
+
+    class INPUT_UNION(ctypes.Union):
+        _fields_ = [("mi", MOUSEINPUT), ("ki", KEYBDINPUT), ("hi", HARDWAREINPUT)]
+
+    class INPUT(ctypes.Structure):
+        _anonymous_ = ("union",)
+        _fields_ = [("type", ctypes.c_ulong), ("union", INPUT_UNION)]
+
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    user32.GetSystemMetrics.argtypes = [ctypes.c_int]
+    user32.GetSystemMetrics.restype = ctypes.c_int
+    user32.SendInput.argtypes = [ctypes.c_uint, ctypes.POINTER(INPUT), ctypes.c_int]
+    user32.SendInput.restype = ctypes.c_uint
+    left = user32.GetSystemMetrics(76)  # SM_XVIRTUALSCREEN
+    top = user32.GetSystemMetrics(77)  # SM_YVIRTUALSCREEN
+    width = user32.GetSystemMetrics(78)  # SM_CXVIRTUALSCREEN
+    height = user32.GetSystemMetrics(79)  # SM_CYVIRTUALSCREEN
+    if width <= 1 or height <= 1:
+        raise RuntimeError("Windows virtual-screen dimensions are invalid")
+    absolute_x = round((x - left) * 65535 / (width - 1))
+    absolute_y = round((y - top) * 65535 / (height - 1))
+    absolute_x = max(0, min(65535, absolute_x))
+    absolute_y = max(0, min(65535, absolute_y))
+    INPUT_MOUSE = 0
+    MOUSEEVENTF_MOVE = 0x0001
+    MOUSEEVENTF_LEFTDOWN = 0x0002
+    MOUSEEVENTF_LEFTUP = 0x0004
+    MOUSEEVENTF_ABSOLUTE = 0x8000
+    MOUSEEVENTF_VIRTUALDESK = 0x4000
+
+    def event(flags: int) -> INPUT:
+        return INPUT(
+            type=INPUT_MOUSE,
+            mi=MOUSEINPUT(
+                dx=absolute_x,
+                dy=absolute_y,
+                mouseData=0,
+                dwFlags=flags,
+                time=0,
+                dwExtraInfo=0,
+            ),
+        )
+
+    inputs = (INPUT * 3)(
+        event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK),
+        event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK),
+        event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK),
+    )
+    sent = user32.SendInput(len(inputs), inputs, ctypes.sizeof(INPUT))
+    if sent != len(inputs):
+        raise RuntimeError(f"SendInput inserted {sent}/{len(inputs)} mouse events (winerror {ctypes.get_last_error()})")
+
+
+def focus_windows_textarea(driver) -> dict[str, int]:
+    """Use a native pointer click at the harness textarea's on-screen center."""
+    geometry = driver.execute_script("""
+      const target = document.querySelector('#target').getBoundingClientRect();
+      return {
+        targetLeft: target.left, targetTop: target.top,
+        targetWidth: target.width, targetHeight: target.height,
+        innerWidth: window.innerWidth, innerHeight: window.innerHeight,
+        outerWidth: window.outerWidth, outerHeight: window.outerHeight,
+        devicePixelRatio: window.devicePixelRatio
+      };
+    """)
+    window = driver.get_window_rect()
+    scale = float(geometry["devicePixelRatio"])
+    chrome_left = (float(geometry["outerWidth"]) - float(geometry["innerWidth"])) / 2
+    chrome_top = float(geometry["outerHeight"]) - float(geometry["innerHeight"])
+    x = round(float(window["x"]) + (chrome_left + float(geometry["targetLeft"]) + float(geometry["targetWidth"]) / 2) * scale)
+    y = round(float(window["y"]) + (chrome_top + float(geometry["targetTop"]) + float(geometry["targetHeight"]) / 2) * scale)
+    inject_windows_click(x, y)
+    return {"x": x, "y": y}
+
+
 def inject_windows(combo: str) -> None:
     try:
         modifier, key = combo.split("→", maxsplit=1)
@@ -489,6 +585,7 @@ def observation_for_case(
             # window without directing focus to the top-level native frame.
             if platform_name == "windows" and not combo.startswith("meta→"):
                 result["foregroundWindow"] = activate_windows_browser(driver.title)
+                result["nativePointerFocus"] = focus_windows_textarea(driver)
             driver.execute_script("window.__keybindingEvidence.setState(arguments[0])", state)
             time.sleep(0.2)
             environment["browserVersion"] = browser_version(driver.capabilities)
