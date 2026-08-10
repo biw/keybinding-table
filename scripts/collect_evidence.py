@@ -283,8 +283,16 @@ def activate_windows_browser(title: str) -> str:
     user32.GetForegroundWindow.restype = wintypes.HWND
     user32.SetForegroundWindow.argtypes = [wintypes.HWND]
     user32.SetForegroundWindow.restype = wintypes.BOOL
+    user32.BringWindowToTop.argtypes = [wintypes.HWND]
+    user32.BringWindowToTop.restype = wintypes.BOOL
+    user32.SetActiveWindow.argtypes = [wintypes.HWND]
+    user32.SetActiveWindow.restype = wintypes.HWND
+    user32.SetFocus.argtypes = [wintypes.HWND]
+    user32.SetFocus.restype = wintypes.HWND
     user32.ShowWindow.argtypes = [wintypes.HWND, ctypes.c_int]
     user32.ShowWindow.restype = wintypes.BOOL
+    user32.PostMessageW.argtypes = [wintypes.HWND, ctypes.c_uint, wintypes.WPARAM, wintypes.LPARAM]
+    user32.PostMessageW.restype = wintypes.BOOL
     user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
     user32.GetWindowThreadProcessId.restype = wintypes.DWORD
     user32.AttachThreadInput.argtypes = [wintypes.DWORD, wintypes.DWORD, wintypes.BOOL]
@@ -317,20 +325,36 @@ def activate_windows_browser(title: str) -> str:
     if target is None:
         raise RuntimeError(f"Could not find a visible browser window titled {title!r}")
 
-    # The foreground-lock rules permit the active thread's input queue to be
-    # attached temporarily to the foreground queue. This is the least invasive
-    # way to activate the browser; the test never sends synthetic DOM events.
+    # GitHub's ARM Windows image can open an unrelated Microsoft-account
+    # onboarding dialog after browser startup. Close only that transient host
+    # dialog; do not dismiss arbitrary application windows.
     foreground = user32.GetForegroundWindow()
+    if foreground and window_title(foreground) == "Microsoft account":
+        user32.PostMessageW(foreground, 0x0010, 0, 0)  # WM_CLOSE
+        time.sleep(0.3)
+        foreground = user32.GetForegroundWindow()
+
+    # The foreground-lock rules permit the active thread's input queue to be
+    # attached temporarily to both the existing foreground queue and target
+    # queue. This is the least invasive way to activate the browser; the test
+    # never sends synthetic DOM events.
     foreground_thread = user32.GetWindowThreadProcessId(foreground, None) if foreground else 0
+    target_thread = user32.GetWindowThreadProcessId(target, None)
     current_thread = kernel32.GetCurrentThreadId()
-    attached = bool(foreground_thread and foreground_thread != current_thread and
-                    user32.AttachThreadInput(current_thread, foreground_thread, True))
+    attached_threads: list[int] = []
+    for thread in (foreground_thread, target_thread):
+        if thread and thread != current_thread and thread not in attached_threads:
+            if user32.AttachThreadInput(current_thread, thread, True):
+                attached_threads.append(thread)
     try:
         user32.ShowWindow(target, 9)  # SW_RESTORE
+        user32.BringWindowToTop(target)
+        user32.SetActiveWindow(target)
+        user32.SetFocus(target)
         user32.SetForegroundWindow(target)
     finally:
-        if attached:
-            user32.AttachThreadInput(current_thread, foreground_thread, False)
+        for thread in reversed(attached_threads):
+            user32.AttachThreadInput(current_thread, thread, False)
 
     if user32.GetForegroundWindow() != target:
         actual = user32.GetForegroundWindow()
