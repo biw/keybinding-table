@@ -125,23 +125,34 @@ jobs:
       - name: Verify or update browser stable releases
         shell: pwsh
         run: |
-          $ids = 'Google.Chrome', 'Microsoft.Edge', 'Mozilla.Firefox'
-          foreach ($id in $ids) {
-            winget upgrade --exact --id $id --silent --accept-source-agreements --accept-package-agreements
-            if ($LASTEXITCODE -ne 0) { Write-Warning "winget could not update $id; the exact installed build is captured as evidence." }
+          $winget = Get-Command winget -ErrorAction SilentlyContinue
+          if ($null -eq $winget) {
+            Write-Warning 'winget is unavailable on this ARM runner; the image-provided browser builds are captured as evidence.'
+          } else {
+            $ids = 'Google.Chrome', 'Microsoft.Edge', 'Mozilla.Firefox'
+            foreach ($id in $ids) {
+              winget upgrade --exact --id $id --silent --accept-source-agreements --accept-package-agreements
+              if ($LASTEXITCODE -ne 0) { Write-Warning "winget could not update $id; the exact installed build is captured as evidence." }
+            }
           }
 
       - name: Capture environment
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path "artifacts/${{ matrix.browser }}" | Out-Null
+          function Browser-Version($candidates) {
+            foreach ($candidate in $candidates) {
+              if (Test-Path $candidate) { return (Get-Item $candidate).VersionInfo.ProductVersion }
+            }
+            return 'not found'
+          }
           @(
             "OS: $(Get-ComputerInfo | Select-Object -ExpandProperty WindowsProductName) $(Get-ComputerInfo | Select-Object -ExpandProperty WindowsVersion)"
             "Runner image: $env:ImageOS/$env:ImageVersion"
             "Keyboard layouts: $(Get-WinUserLanguageList | ConvertTo-Json -Compress)"
-            "Chrome: $((Get-Item (Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe')).VersionInfo.ProductVersion)"
-            "Edge: $((Get-Item (Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe')).VersionInfo.ProductVersion)"
-            "Firefox: $((Get-Item (Join-Path $env:ProgramFiles 'Mozilla Firefox\firefox.exe')).VersionInfo.ProductVersion)"
+            "Chrome: $(Browser-Version @((Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe'), (Join-Path ${env:ProgramFiles(x86)} 'Google\Chrome\Application\chrome.exe')))"
+            "Edge: $(Browser-Version @((Join-Path $env:ProgramFiles 'Microsoft\Edge\Application\msedge.exe'), (Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe')))"
+            "Firefox: $(Browser-Version @((Join-Path $env:ProgramFiles 'Mozilla Firefox\firefox.exe'), (Join-Path ${env:ProgramFiles(x86)} 'Mozilla Firefox\firefox.exe')))"
           ) | Set-Content "artifacts/${{ matrix.browser }}/environment.txt"
 
       - name: Collect real-input evidence
