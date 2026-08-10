@@ -20,18 +20,32 @@ const targetColumns = [
 ];
 
 function usage() {
-  console.error('usage: transcribe-evidence.mjs --artifact <run URL> observation.json [...]');
+  console.error('usage: transcribe-evidence.mjs --artifact <run URL> observation.json [...] [--artifact <run URL> observation.json ...]');
   process.exit(2);
 }
 
-const artifactIndex = process.argv.indexOf('--artifact');
-if (artifactIndex === -1 || !process.argv[artifactIndex + 1]) usage();
-const artifact = process.argv[artifactIndex + 1];
-const inputPaths = process.argv.slice(2).filter((argument, index) => index !== artifactIndex - 2 && index !== artifactIndex - 1);
-if (!inputPaths.length) usage();
+let currentArtifact;
+const inputs = [];
+for (let index = 2; index < process.argv.length; index += 1) {
+  if (process.argv[index] === '--artifact') {
+    currentArtifact = process.argv[index + 1];
+    if (!currentArtifact) usage();
+    index += 1;
+    continue;
+  }
+  if (!currentArtifact) usage();
+  inputs.push({ path: process.argv[index], artifact: currentArtifact });
+}
+if (!inputs.length) usage();
 
-const documents = await Promise.all(inputPaths.map(async (path) => JSON.parse(await readFile(path, 'utf8'))));
-const observations = documents.flatMap((document) => document.observations ?? []);
+const documents = await Promise.all(inputs.map(async ({ path, artifact }) => ({
+  artifact,
+  document: JSON.parse(await readFile(path, 'utf8'))
+})));
+const observations = documents.flatMap(({ document, artifact }) => (document.observations ?? []).map((observation) => ({
+  ...observation,
+  artifact: `${artifact} (${observation.artifact})`
+})));
 if (!observations.length) throw new Error('No observations were supplied.');
 const failures = observations.filter((observation) => observation.result?.kind === 'injector-failure');
 if (failures.length) throw new Error(`Refusing to transcribe ${failures.length} injector failures.`);
@@ -40,10 +54,7 @@ const byKey = new Map();
 for (const observation of observations) {
   const key = [observation.combo, observation.target, observation.state].join('|');
   if (byKey.has(key)) throw new Error(`Duplicate observation: ${key}`);
-  byKey.set(key, {
-    ...observation,
-    artifact: `${artifact} (${observation.artifact})`
-  });
+  byKey.set(key, observation);
 }
 
 const readmePath = resolve(root, 'README.md');
@@ -142,7 +153,7 @@ await writeFile(readmePath, `${rewritten.join('\n').replace(/\n+$/, '')}\n`, 'ut
 await writeFile(evidencePath, `${JSON.stringify({
   schemaVersion: 1,
   metadata: {
-    workflowRun: artifact,
+    workflowRuns: [...new Set(documents.map(({ artifact }) => artifact))],
     inputLayout: 'U.S.',
     cleanProfile: true,
     transcribedAt: new Date().toISOString()
