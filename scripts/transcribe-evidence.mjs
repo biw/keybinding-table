@@ -87,7 +87,11 @@ function observedLabel(records) {
   }
   const before = changedRecord.result.before;
   const after = changedRecord.result.after;
-  if (!after) return 'tested page closed or was replaced after native input';
+  if (!after) {
+    return changedRecord.result.error?.includes('timed out')
+      ? 'opens browser/OS UI; textarea postcondition timed out'
+      : 'tested page closed or was replaced after native input';
+  }
   if (before.value !== after.value) {
     const delta = textDelta(before.value, after.value);
     if (!delta.removed) return `inserts ${quoted(delta.inserted)} at textarea offset ${delta.start}`;

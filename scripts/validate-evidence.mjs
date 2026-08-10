@@ -90,10 +90,13 @@ for (const [index, observation] of (document.observations ?? []).entries()) {
   if (typeof observation.artifact !== 'string' || !observation.artifact.trim()) {
     errors.push(`${prefix}: artifact is required`);
   }
-  if (['observed', 'observed-no-effect', 'os-level'].includes(observation.result?.kind)) {
+  if (['observed-no-effect', 'os-level'].includes(observation.result?.kind)) {
     if (!observation.result.before || !observation.result.after) {
-      errors.push(`${prefix}: observed result requires before and after state`);
+      errors.push(`${prefix}: stable observed result requires before and after state`);
     }
+  }
+  if (observation.result?.kind === 'observed' && (!observation.result.before || (!observation.result.after && !observation.result.error))) {
+    errors.push(`${prefix}: changed observed result requires before state and an after state or postcondition error`);
   }
   const key = [observation.combo, observation.target, observation.state].join('|');
   if (seen.has(key)) errors.push(`${prefix}: duplicate combo/target/state record`);

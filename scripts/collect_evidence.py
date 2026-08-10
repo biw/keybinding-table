@@ -605,6 +605,16 @@ def observation_for_case(
         try:
             driver = webdriver_for(platform_name, browser, Path(profile_directory))
             driver.set_page_load_timeout(15)
+            # Some documented browser shortcuts open native save/print panels.
+            # WebDriver cannot inspect a page while that panel owns the app
+            # event loop, so bound every command rather than letting one real
+            # shortcut stall the entire evidence matrix. The record retains
+            # the precondition and the native-input error as an observed
+            # browser/UI outcome; the disposable browser is then terminated.
+            driver.set_script_timeout(5)
+            client_config = getattr(driver.command_executor, "_client_config", None)
+            if client_config is not None:
+                client_config.timeout = 5
             driver.get(harness_url)
             driver.find_element("id", "target").click()
             if platform_name == "macos":
