@@ -442,48 +442,53 @@ def activate_windows_browser(title: str) -> str:
 
     # GitHub's ARM Windows image can open an unrelated Microsoft-account
     # onboarding dialog and then its Search panel after browser startup. Close
-    # only these known transient host windows; do not dismiss arbitrary app
-    # windows or infer browser behavior while one owns foreground input.
-    foreground = user32.GetForegroundWindow()
+    # only these known transient host windows and retry the foreground handoff;
+    # do not dismiss arbitrary applications.
+    interference_titles = {"Microsoft account", "Search"}
+    last_foreground_title = ""
     for _ in range(3):
-        if not foreground or window_title(foreground) not in {"Microsoft account", "Search"}:
-            break
-        user32.PostMessageW(foreground, 0x0010, 0, 0)  # WM_CLOSE
-        time.sleep(0.3)
         foreground = user32.GetForegroundWindow()
+        for _ in range(5):
+            if not foreground or window_title(foreground) not in interference_titles:
+                break
+            user32.PostMessageW(foreground, 0x0010, 0, 0)  # WM_CLOSE
+            time.sleep(0.3)
+            foreground = user32.GetForegroundWindow()
 
-    # SetForegroundWindow permits a process that received the last input to
-    # activate its target. A down/up Alt pulse is sent through SendInput (the
-    # same native OS path as the tested key), then no browser behavior is
-    # sampled until foreground ownership is verified below.
-    send_windows_key_events([(0x12, False), (0x12, True)])  # VK_MENU
+        # SetForegroundWindow permits a process that received the last input
+        # to activate its target. A down/up Alt pulse is sent through SendInput
+        # (the same native OS path as the tested key), then no browser behavior
+        # is sampled until foreground ownership is verified below.
+        send_windows_key_events([(0x12, False), (0x12, True)])  # VK_MENU
 
-    # The foreground-lock rules permit the active thread's input queue to be
-    # attached temporarily to both the existing foreground queue and target
-    # queue. This is the least invasive way to activate the browser; the test
-    # never sends synthetic DOM events.
-    foreground_thread = user32.GetWindowThreadProcessId(foreground, None) if foreground else 0
-    target_thread = user32.GetWindowThreadProcessId(target, None)
-    current_thread = kernel32.GetCurrentThreadId()
-    attached_threads: list[int] = []
-    for thread in (foreground_thread, target_thread):
-        if thread and thread != current_thread and thread not in attached_threads:
-            if user32.AttachThreadInput(current_thread, thread, True):
-                attached_threads.append(thread)
-    try:
-        user32.ShowWindow(target, 9)  # SW_RESTORE
-        user32.BringWindowToTop(target)
-        user32.SetForegroundWindow(target)
-    finally:
-        for thread in reversed(attached_threads):
-            user32.AttachThreadInput(current_thread, thread, False)
+        # The foreground-lock rules permit the active thread's input queue to
+        # be attached temporarily to both the existing foreground queue and
+        # target queue. This is the least invasive way to activate the browser;
+        # the test never sends synthetic DOM events.
+        foreground_thread = user32.GetWindowThreadProcessId(foreground, None) if foreground else 0
+        target_thread = user32.GetWindowThreadProcessId(target, None)
+        current_thread = kernel32.GetCurrentThreadId()
+        attached_threads: list[int] = []
+        for thread in (foreground_thread, target_thread):
+            if thread and thread != current_thread and thread not in attached_threads:
+                if user32.AttachThreadInput(current_thread, thread, True):
+                    attached_threads.append(thread)
+        try:
+            user32.ShowWindow(target, 9)  # SW_RESTORE
+            user32.BringWindowToTop(target)
+            user32.SetForegroundWindow(target)
+        finally:
+            for thread in reversed(attached_threads):
+                user32.AttachThreadInput(current_thread, thread, False)
 
-    if user32.GetForegroundWindow() != target:
         actual = user32.GetForegroundWindow()
-        raise RuntimeError(
-            f"Could not foreground the browser window (foreground title: {window_title(actual)!r})"
-        )
-    return window_title(target)
+        if actual == target:
+            return window_title(target)
+        last_foreground_title = window_title(actual) if actual else ""
+        if last_foreground_title not in interference_titles:
+            break
+        time.sleep(0.2)
+    raise RuntimeError(f"Could not foreground the browser window (foreground title: {last_foreground_title!r})")
 
 
 def inject_macos(injector: Path, bundle: str, combo: str) -> None:
