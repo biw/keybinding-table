@@ -175,6 +175,11 @@ def webdriver_for(platform_name: str, browser: str, profile: Path):
         from selenium.webdriver.chrome.options import Options
 
         options = Options()
+        if platform_name == "macos":
+            # Selenium otherwise prefers the runner's bundled Chrome for
+            # Testing, which may lag the current stable cask and mismatch the
+            # ChromeDriver version selected by webdriver-manager.
+            options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
         options.add_argument(f"--user-data-dir={profile}")
         options.add_argument("--no-first-run")
         options.add_argument("--no-default-browser-check")
