@@ -26,7 +26,9 @@ function usage() {
 
 let currentArtifact;
 const inputs = [];
+const allowPartial = process.argv.includes('--allow-partial');
 for (let index = 2; index < process.argv.length; index += 1) {
+  if (process.argv[index] === '--allow-partial') continue;
   if (process.argv[index] === '--artifact') {
     currentArtifact = process.argv[index + 1];
     if (!currentArtifact) usage();
@@ -131,7 +133,7 @@ const rewritten = lines.map((line) => {
   const combo = rowCombo(line);
   if (!combo) return line;
   const cells = line.split('|');
-  if (cells.length !== 8) throw new Error(`Unexpected table row shape for ${combo}`);
+  if (cells.length !== 9) throw new Error(`Unexpected table row shape for ${combo}`);
   for (let index = 0; index < targetColumns.length; index += 1) {
     const column = targetColumns[index];
     const records = ['textarea-caret', 'textarea-selection'].map((state) => byKey.get([combo, column.target, state].join('|')));
@@ -146,7 +148,9 @@ const rewritten = lines.map((line) => {
   }
   return cells.join('|');
 });
-if (missing.length) throw new Error(`Missing both-state evidence for ${missing.slice(0, 10).join(', ')}${missing.length > 10 ? '…' : ''}`);
+if (missing.length && !allowPartial) {
+  throw new Error(`Missing both-state evidence for ${missing.slice(0, 10).join(', ')}${missing.length > 10 ? '…' : ''}`);
+}
 
 const targetOrder = new Map(targetColumns.map((column, index) => [column.target, index]));
 observations.sort((left, right) => [left.combo, targetOrder.get(left.target), left.state].join('|').localeCompare([right.combo, targetOrder.get(right.target), right.state].join('|')));
@@ -155,6 +159,7 @@ await writeFile(evidencePath, `${JSON.stringify({
   schemaVersion: 1,
   metadata: {
     workflowRuns: [...new Set(documents.map(({ artifact }) => artifact))],
+    completeMatrix: missing.length === 0,
     inputLayout: 'U.S.',
     cleanProfile: true,
     transcribedAt: new Date().toISOString()
