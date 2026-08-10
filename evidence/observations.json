@@ -2,12 +2,13 @@
   "schemaVersion": 1,
   "metadata": {
     "workflowRuns": [
-      "https://github.com/biw/keybinding-table/actions/runs/31433666214"
+      "https://github.com/biw/keybinding-table/actions/runs/31433666214",
+      "https://github.com/biw/keybinding-table/actions/runs/31442085221"
     ],
     "completeMatrix": false,
     "inputLayout": "U.S.",
     "cleanProfile": true,
-    "transcribedAt": "2026-08-10T23:20:23.933Z"
+    "transcribedAt": "2026-08-10T23:27:53.993Z"
   },
   "observations": [
     {
@@ -110376,6 +110377,154 @@
     },
     {
       "combo": "meta→a",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:23:08Z"
+    },
+    {
+      "combo": "meta→a",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:23:29Z"
+    },
+    {
+      "combo": "meta→a",
       "target": "chrome-windows",
       "state": "textarea-caret",
       "result": {
@@ -111103,6 +111252,154 @@
       ],
       "artifact": "https://github.com/biw/keybinding-table/actions/runs/31433666214 (keybinding-evidence-macos-chrome)",
       "capturedAt": "2026-08-10T21:26:50Z"
+    },
+    {
+      "combo": "meta→b",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:23:41Z"
+    },
+    {
+      "combo": "meta→b",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:23:52Z"
     },
     {
       "combo": "meta→b",
@@ -111878,6 +112175,154 @@
     },
     {
       "combo": "meta→c",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:24:04Z"
+    },
+    {
+      "combo": "meta→c",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:24:16Z"
+    },
+    {
+      "combo": "meta→c",
       "target": "chrome-windows",
       "state": "textarea-caret",
       "result": {
@@ -112535,6 +112980,154 @@
       ],
       "artifact": "https://github.com/biw/keybinding-table/actions/runs/31433666214 (keybinding-evidence-macos-chrome)",
       "capturedAt": "2026-08-10T21:27:03Z"
+    },
+    {
+      "combo": "meta→d",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:24:28Z"
+    },
+    {
+      "combo": "meta→d",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:24:40Z"
     },
     {
       "combo": "meta→d",
@@ -113251,6 +113844,154 @@
       ],
       "artifact": "https://github.com/biw/keybinding-table/actions/runs/31433666214 (keybinding-evidence-macos-chrome)",
       "capturedAt": "2026-08-10T21:27:10Z"
+    },
+    {
+      "combo": "meta→e",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:24:51Z"
+    },
+    {
+      "combo": "meta→e",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:25:03Z"
     },
     {
       "combo": "meta→e",
@@ -113984,6 +114725,154 @@
     },
     {
       "combo": "meta→f",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:25:15Z"
+    },
+    {
+      "combo": "meta→f",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:25:27Z"
+    },
+    {
+      "combo": "meta→f",
       "target": "chrome-windows",
       "state": "textarea-caret",
       "result": {
@@ -114697,6 +115586,154 @@
       ],
       "artifact": "https://github.com/biw/keybinding-table/actions/runs/31433666214 (keybinding-evidence-macos-chrome)",
       "capturedAt": "2026-08-10T21:27:22Z"
+    },
+    {
+      "combo": "meta→g",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:25:39Z"
+    },
+    {
+      "combo": "meta→g",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:25:51Z"
     },
     {
       "combo": "meta→g",
@@ -115444,6 +116481,154 @@
     },
     {
       "combo": "meta→h",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:26:03Z"
+    },
+    {
+      "combo": "meta→h",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:26:15Z"
+    },
+    {
+      "combo": "meta→h",
       "target": "chrome-windows",
       "state": "textarea-caret",
       "result": {
@@ -116171,6 +117356,154 @@
       ],
       "artifact": "https://github.com/biw/keybinding-table/actions/runs/31433666214 (keybinding-evidence-macos-chrome)",
       "capturedAt": "2026-08-10T21:27:35Z"
+    },
+    {
+      "combo": "meta→i",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:26:27Z"
+    },
+    {
+      "combo": "meta→i",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:26:39Z"
     },
     {
       "combo": "meta→i",
@@ -116943,6 +118276,154 @@
       ],
       "artifact": "https://github.com/biw/keybinding-table/actions/runs/31433666214 (keybinding-evidence-macos-chrome)",
       "capturedAt": "2026-08-10T21:27:42Z"
+    },
+    {
+      "combo": "meta→j",
+      "target": "firefox-windows",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 8,
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:26:51Z"
+    },
+    {
+      "combo": "meta→j",
+      "target": "firefox-windows",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "os-level",
+        "summary": "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD.",
+        "before": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "activeElement": "target",
+          "events": [
+            {
+              "altKey": false,
+              "code": null,
+              "ctrlKey": false,
+              "data": null,
+              "defaultPrevented": false,
+              "inputType": null,
+              "isTrusted": true,
+              "key": null,
+              "metaKey": false,
+              "shiftKey": false,
+              "target": "target",
+              "type": "selectionchange"
+            }
+          ],
+          "scrollTop": 0,
+          "selectionEnd": 17,
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "url": "http://127.0.0.1:53998/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null
+      },
+      "environment": {
+        "browser": "Firefox",
+        "browserVersion": "153.0.3",
+        "os": "Windows-11-10.0.26200-SP0",
+        "runnerImage": "win11-arm64/20260804.129.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "FF-KEYBOARD",
+        "WIN-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31442085221 (keybinding-evidence-windows-firefox)",
+      "capturedAt": "2026-08-10T23:27:03Z"
     },
     {
       "combo": "meta→j",
