@@ -63,21 +63,19 @@ TARGETS = {
     },
 }
 
-WINDOWS_KEY_CODES = {
-    **{character: ord(character.upper()) for character in "abcdefghijklmnopqrstuvwxyz"},
-    **{character: ord(character) for character in "0123456789"},
-    ";": 0xBA,
-    "=": 0xBB,
-    ",": 0xBC,
-    "-": 0xBD,
-    ".": 0xBE,
-    "/": 0xBF,
-    "`": 0xC0,
-    "[": 0xDB,
-    "]": 0xDD,
-    "'": 0xDE,
+WINDOWS_SCAN_CODES = {
+    "a": 0x1E, "b": 0x30, "c": 0x2E, "d": 0x20, "e": 0x12,
+    "f": 0x21, "g": 0x22, "h": 0x23, "i": 0x17, "j": 0x24,
+    "k": 0x25, "l": 0x26, "m": 0x32, "n": 0x31, "o": 0x18,
+    "p": 0x19, "q": 0x10, "r": 0x13, "s": 0x1F, "t": 0x14,
+    "u": 0x16, "v": 0x2F, "w": 0x11, "x": 0x2D, "y": 0x15,
+    "z": 0x2C,
+    "1": 0x02, "2": 0x03, "3": 0x04, "4": 0x05, "5": 0x06,
+    "6": 0x07, "7": 0x08, "8": 0x09, "9": 0x0A, "0": 0x0B,
+    "-": 0x0C, "=": 0x0D, "[": 0x1A, "]": 0x1B, ";": 0x27,
+    "'": 0x28, "`": 0x29, ",": 0x33, ".": 0x34, "/": 0x35,
 }
-WINDOWS_MODIFIERS = {"ctrl": 0x11, "alt": 0x12, "meta": 0x5B}
+WINDOWS_MODIFIER_SCAN_CODES = {"ctrl": 0x1D, "alt": 0x38, "meta": 0x5B}
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -199,8 +197,8 @@ def webdriver_for(platform_name: str, browser: str, profile: Path):
     raise RuntimeError(f"Unsupported browser {browser} on {platform_name}")
 
 
-def send_windows_key_events(events: list[tuple[int, bool]]) -> None:
-    """Insert physical-key virtual-key events through the Windows input stream."""
+def send_windows_key_events(events: list[tuple[int, bool]], *, scan_codes: bool = False) -> None:
+    """Insert virtual-key or physical U.S. scan-code events through SendInput."""
     class KEYBDINPUT(ctypes.Structure):
         _fields_ = [
             ("wVk", ctypes.c_ushort),
@@ -236,14 +234,16 @@ def send_windows_key_events(events: list[tuple[int, bool]]) -> None:
 
     INPUT_KEYBOARD = 1
     KEYEVENTF_KEYUP = 0x0002
+    KEYEVENTF_SCANCODE = 0x0008
 
     def event(code: int, key_up: bool = False) -> INPUT:
+        flags = (KEYEVENTF_KEYUP if key_up else 0) | (KEYEVENTF_SCANCODE if scan_codes else 0)
         return INPUT(
             type=INPUT_KEYBOARD,
             ki=KEYBDINPUT(
-                wVk=code,
-                wScan=0,
-                dwFlags=KEYEVENTF_KEYUP if key_up else 0,
+                wVk=0 if scan_codes else code,
+                wScan=code if scan_codes else 0,
+                dwFlags=flags,
                 time=0,
                 dwExtraInfo=0,
             ),
@@ -261,8 +261,8 @@ def send_windows_key_events(events: list[tuple[int, bool]]) -> None:
 def inject_windows(combo: str) -> None:
     try:
         modifier, key = combo.split("→", maxsplit=1)
-        modifier_code = WINDOWS_MODIFIERS[modifier]
-        key_code = WINDOWS_KEY_CODES[key]
+        modifier_code = WINDOWS_MODIFIER_SCAN_CODES[modifier]
+        key_code = WINDOWS_SCAN_CODES[key]
     except (KeyError, ValueError) as error:
         raise RuntimeError(f"Unsupported Windows U.S. ANSI combo: {combo}") from error
     send_windows_key_events([
@@ -270,7 +270,7 @@ def inject_windows(combo: str) -> None:
         (key_code, False),
         (key_code, True),
         (modifier_code, True),
-    ])
+    ], scan_codes=True)
 
 
 def activate_windows_browser(title: str) -> str:
