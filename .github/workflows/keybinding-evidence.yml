@@ -1,0 +1,175 @@
+name: Collect keybinding evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform evidence to collect
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - macos
+          - windows
+      combos:
+        description: all, or comma-separated canonical combos such as ctrl→a,alt→b
+        required: true
+        default: all
+        type: string
+      states:
+        description: Textarea focus states to collect
+        required: true
+        default: both
+        type: choice
+        options:
+          - both
+          - caret
+          - selection
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'macos' }}
+    name: macOS 26 / ${{ matrix.browser }}
+    runs-on: macos-26
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [safari, chrome, firefox]
+    env:
+      COMBOS: ${{ inputs.combos }}
+      STATES: ${{ inputs.states }}
+      ARTIFACT_NAME: keybinding-evidence-macos-${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install current Chrome and Firefox stable releases
+        shell: bash
+        run: |
+          brew update
+          for cask in google-chrome firefox; do
+            if brew list --cask "$cask" >/dev/null 2>&1; then
+              brew upgrade --cask "$cask"
+            else
+              brew install --cask "$cask"
+            fi
+          done
+          sudo safaridriver --enable
+
+      - name: Capture environment
+        shell: bash
+        run: |
+          mkdir -p artifacts/${{ matrix.browser }}
+          {
+            sw_vers
+            echo "Runner image: ${ImageOS:-unknown}/${ImageVersion:-unknown}"
+            defaults read com.apple.HIToolbox AppleSelectedInputSources
+            /Applications/Safari.app/Contents/MacOS/Safari --version
+            /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version
+            /Applications/Firefox.app/Contents/MacOS/firefox --version
+          } > artifacts/${{ matrix.browser }}/environment.txt
+
+      - name: Collect real-input evidence
+        shell: bash
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install --disable-pip-version-check 'selenium>=4.31,<5'
+          swiftc scripts/macos-keypress.swift -o "$RUNNER_TEMP/macos-keypress"
+          python scripts/collect_evidence.py \
+            --platform macos \
+            --browser '${{ matrix.browser }}' \
+            --combos "$COMBOS" \
+            --states "$STATES" \
+            --output artifacts/${{ matrix.browser }}/observations.json \
+            --summary artifacts/${{ matrix.browser }}/summary.md \
+            --artifact "$ARTIFACT_NAME" \
+            --runner-image "${ImageOS:-unknown}/${ImageVersion:-unknown}" \
+            --mac-injector "$RUNNER_TEMP/macos-keypress"
+
+      - name: Validate evidence structure
+        shell: bash
+        run: node scripts/validate-evidence.mjs --reject-injector-failures --observations artifacts/${{ matrix.browser }}/observations.json
+
+      - name: Publish concise result summary
+        shell: bash
+        run: cat artifacts/${{ matrix.browser }}/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: keybinding-evidence-macos-${{ matrix.browser }}
+          path: artifacts/${{ matrix.browser }}
+          if-no-files-found: error
+
+  windows:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'windows' }}
+    name: Windows 11 ARM / ${{ matrix.browser }}
+    runs-on: windows-11-arm
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, edge, firefox]
+    env:
+      COMBOS: ${{ inputs.combos }}
+      STATES: ${{ inputs.states }}
+      ARTIFACT_NAME: keybinding-evidence-windows-${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install current browser stable releases
+        shell: pwsh
+        run: |
+          $ids = 'Google.Chrome', 'Microsoft.Edge', 'Mozilla.Firefox'
+          foreach ($id in $ids) {
+            winget install --exact --id $id --force --silent --accept-source-agreements --accept-package-agreements
+            if ($LASTEXITCODE -ne 0) { throw "Unable to install current stable $id" }
+          }
+
+      - name: Capture environment
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "artifacts/${{ matrix.browser }}" | Out-Null
+          @(
+            "OS: $(Get-ComputerInfo | Select-Object -ExpandProperty WindowsProductName) $(Get-ComputerInfo | Select-Object -ExpandProperty WindowsVersion)"
+            "Runner image: $env:ImageOS/$env:ImageVersion"
+            "Keyboard layouts: $(Get-WinUserLanguageList | ConvertTo-Json -Compress)"
+            "Chrome: $((Get-Item (Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe')).VersionInfo.ProductVersion)"
+            "Edge: $((Get-Item (Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe')).VersionInfo.ProductVersion)"
+            "Firefox: $((Get-Item (Join-Path $env:ProgramFiles 'Mozilla Firefox\firefox.exe')).VersionInfo.ProductVersion)"
+          ) | Set-Content "artifacts/${{ matrix.browser }}/environment.txt"
+
+      - name: Collect real-input evidence
+        shell: pwsh
+        run: |
+          py -3 -m venv .venv
+          .venv\Scripts\python -m pip install --disable-pip-version-check 'selenium>=4.31,<5'
+          .venv\Scripts\python scripts/collect_evidence.py `
+            --platform windows `
+            --browser '${{ matrix.browser }}' `
+            --combos "$env:COMBOS" `
+            --states "$env:STATES" `
+            --output "artifacts/${{ matrix.browser }}/observations.json" `
+            --summary "artifacts/${{ matrix.browser }}/summary.md" `
+            --artifact "$env:ARTIFACT_NAME" `
+            --runner-image "$env:ImageOS/$env:ImageVersion"
+
+      - name: Validate evidence structure
+        shell: pwsh
+        run: node scripts/validate-evidence.mjs --reject-injector-failures --observations "artifacts/${{ matrix.browser }}/observations.json"
+
+      - name: Publish concise result summary
+        shell: pwsh
+        run: Get-Content "artifacts/${{ matrix.browser }}/summary.md" | Add-Content $env:GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: keybinding-evidence-windows-${{ matrix.browser }}
+          path: artifacts/${{ matrix.browser }}
+          if-no-files-found: error

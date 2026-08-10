@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Keybinding observation",
+  "type": "object",
+  "required": ["schemaVersion", "observations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "combo",
+          "target",
+          "state",
+          "result",
+          "environment",
+          "sources",
+          "artifact"
+        ],
+        "properties": {
+          "combo": { "type": "string", "pattern": "^(meta|ctrl|alt)→.+$" },
+          "target": {
+            "enum": [
+              "firefox-macos",
+              "chromium-macos",
+              "safari-macos",
+              "firefox-windows",
+              "chrome-windows",
+              "edge-windows"
+            ]
+          },
+          "state": { "enum": ["textarea-caret", "textarea-selection"] },
+          "result": {
+            "type": "object",
+            "required": ["kind", "summary"],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "observed",
+                  "observed-no-effect",
+                  "os-level",
+                  "requires-manual-verification",
+                  "injector-failure"
+                ]
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "before": { "type": ["object", "null"] },
+              "after": { "type": ["object", "null"] },
+              "error": { "type": ["string", "null"] }
+            }
+          },
+          "environment": {
+            "type": "object",
+            "required": [
+              "browser",
+              "browserVersion",
+              "os",
+              "runnerImage",
+              "inputLayout",
+              "cleanProfile"
+            ],
+            "properties": {
+              "browser": { "type": "string", "minLength": 1 },
+              "browserVersion": { "type": "string", "minLength": 1 },
+              "os": { "type": "string", "minLength": 1 },
+              "runnerImage": { "type": "string", "minLength": 1 },
+              "inputLayout": { "const": "U.S." },
+              "cleanProfile": { "const": true }
+            }
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "pattern": "^[A-Z0-9-]+$" }
+          },
+          "artifact": { "type": "string", "minLength": 1 },
+          "capturedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

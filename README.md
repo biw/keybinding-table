@@ -4,6 +4,20 @@
 - The `alt` key is the `option` key on macOS and the `alt` key on Windows
 - All testing for `(in input)` is done in a textarea without any event trigger overwrites (i.e. not the github editor)
 
+## Evidence and scope
+
+This table is being migrated from historical entries to versioned evidence.
+Existing unmarked values are legacy observations, not newly verified facts.
+New or corrected cells use compact source IDs such as `〔FF-KEYBOARD〕`; their
+URLs, retrieval dates, and caveats are in [SOURCES.md](SOURCES.md), while the
+corresponding versioned raw observations live in [evidence](evidence/README.md).
+
+The canonical test baseline is a clean, policy-free browser profile with a U.S.
+keyboard layout and a focused plain textarea. On Windows, `meta` means the
+Windows-logo key: values in those rows are labeled as OS-level behavior rather
+than browser-owned shortcuts. A missing documentation entry is never treated as
+proof that a chord has no effect.
+
 | Key Combo        | Firefox MacOS                                           | Chromium macOS                                                                   | Safari macOS      | Firefox Windows | Chrome Windows | Edge (Chromium Based) Windows |
 | ---------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------- | --------------- | -------------- | ----------------------------- |
 | **`meta→a`**     | `select all`                                            | `select all`                                                                     | `select all`      | _unknown_       | _unknown_      | _unknown_                     |

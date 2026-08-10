@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Keybinding evidence textarea harness</title>
+    <style>
+      body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem; }
+      textarea { display: block; height: 12rem; margin-top: 1rem; width: min(48rem, 100%); }
+      pre { background: #f6f8fa; overflow-wrap: anywhere; padding: 1rem; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <h1>Keybinding evidence textarea harness</h1>
+    <p>This page only observes events. It does not cancel, replace, or trigger shortcut behavior.</p>
+    <textarea id="target" aria-label="Keybinding test textarea"></textarea>
+    <pre id="status" aria-live="polite"></pre>
+    <script>
+      (() => {
+        const textarea = document.querySelector('#target');
+        const status = document.querySelector('#status');
+        const events = [];
+        const sentinel = 'first line\nsecond line\nthird line';
+        const log = (event) => {
+          events.push({
+            type: event.type,
+            key: event.key ?? null,
+            code: event.code ?? null,
+            ctrlKey: event.ctrlKey ?? false,
+            altKey: event.altKey ?? false,
+            metaKey: event.metaKey ?? false,
+            shiftKey: event.shiftKey ?? false,
+            defaultPrevented: event.defaultPrevented,
+            isTrusted: event.isTrusted,
+            inputType: event.inputType ?? null,
+            data: event.data ?? null,
+            target: event.target?.id ?? event.target?.nodeName ?? null
+          });
+          render();
+        };
+        for (const type of ['keydown', 'keypress', 'beforeinput', 'input', 'keyup', 'focus', 'blur', 'selectionchange']) {
+          document.addEventListener(type, log, { capture: true, passive: true });
+        }
+        const snapshot = () => ({
+          value: textarea.value,
+          selectionStart: textarea.selectionStart,
+          selectionEnd: textarea.selectionEnd,
+          scrollTop: textarea.scrollTop,
+          activeElement: document.activeElement?.id ?? document.activeElement?.nodeName ?? null,
+          events: [...events]
+        });
+        const render = () => { status.textContent = JSON.stringify(snapshot(), null, 2); };
+        const setState = (state) => {
+          events.length = 0;
+          textarea.value = sentinel;
+          textarea.focus();
+          if (state === 'textarea-selection') {
+            textarea.setSelectionRange(6, 17);
+          } else {
+            textarea.setSelectionRange(8, 8);
+          }
+          render();
+        };
+        window.__keybindingEvidence = { setState, snapshot };
+        setState('textarea-caret');
+      })();
+    </script>
+  </body>
+</html>
