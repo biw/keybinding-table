@@ -202,8 +202,25 @@ def inject_windows(combo: str) -> None:
             ("dwExtraInfo", ctypes.c_size_t),
         ]
 
+    class MOUSEINPUT(ctypes.Structure):
+        _fields_ = [
+            ("dx", ctypes.c_long),
+            ("dy", ctypes.c_long),
+            ("mouseData", ctypes.c_ulong),
+            ("dwFlags", ctypes.c_ulong),
+            ("time", ctypes.c_ulong),
+            ("dwExtraInfo", ctypes.c_size_t),
+        ]
+
+    class HARDWAREINPUT(ctypes.Structure):
+        _fields_ = [
+            ("uMsg", ctypes.c_ulong),
+            ("wParamL", ctypes.c_ushort),
+            ("wParamH", ctypes.c_ushort),
+        ]
+
     class INPUT_UNION(ctypes.Union):
-        _fields_ = [("ki", KEYBDINPUT)]
+        _fields_ = [("mi", MOUSEINPUT), ("ki", KEYBDINPUT), ("hi", HARDWAREINPUT)]
 
     class INPUT(ctypes.Structure):
         _anonymous_ = ("union",)
@@ -225,7 +242,10 @@ def inject_windows(combo: str) -> None:
         )
 
     inputs = (INPUT * 4)(event(modifier_code), event(key_code), event(key_code, True), event(modifier_code, True))
-    sent = ctypes.windll.user32.SendInput(4, ctypes.byref(inputs), ctypes.sizeof(INPUT))
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    user32.SendInput.argtypes = [ctypes.c_uint, ctypes.POINTER(INPUT), ctypes.c_int]
+    user32.SendInput.restype = ctypes.c_uint
+    sent = user32.SendInput(4, inputs, ctypes.sizeof(INPUT))
     if sent != 4:
         raise RuntimeError(f"SendInput inserted {sent}/4 events (winerror {ctypes.get_last_error()})")
 
