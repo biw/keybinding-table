@@ -99,6 +99,7 @@ function observedLabel(records) {
   const before = changedRecord.result.before;
   const after = changedRecord.result.after;
   if (!after) {
+    if (changedRecord.result.modal) return changedRecord.result.modal;
     return changedRecord.result.error?.includes('timed out')
       ? 'opens browser/OS UI; textarea postcondition timed out'
       : 'tested page closed or was replaced after native input';

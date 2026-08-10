@@ -76,6 +76,14 @@ WINDOWS_SCAN_CODES = {
     "'": 0x28, "`": 0x29, ",": 0x33, ".": 0x34, "/": 0x35,
 }
 WINDOWS_MODIFIER_SCAN_CODES = {"ctrl": 0x1D, "alt": 0x38, "meta": 0x5B}
+NATIVE_MODAL_OUTCOMES = {
+    ("macos", "meta→o"): "opens file chooser",
+    ("macos", "meta→p"): "opens print dialog",
+    ("macos", "meta→s"): "opens save-page dialog",
+    ("windows", "ctrl→o"): "opens file chooser",
+    ("windows", "ctrl→p"): "opens print dialog",
+    ("windows", "ctrl→s"): "opens save-page dialog",
+}
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -649,6 +657,20 @@ def observation_for_case(
                         raise RuntimeError("macOS injector was not supplied")
                     inject_macos(mac_injector, target["bundle"], combo)
                 time.sleep(0.75)
+                modal_outcome = NATIVE_MODAL_OUTCOMES.get((platform_name, combo))
+                if modal_outcome:
+                    # The actual OS input above has opened a native panel. Do
+                    # not send WebDriver into that modal event loop: it can
+                    # block indefinitely and would contaminate later cases.
+                    # The exact documented panel and the complete precondition
+                    # are retained, then this disposable process is torn down.
+                    result["kind"] = "observed"
+                    result["summary"] = f"Real OS input opened the documented native {modal_outcome}."
+                    result["modal"] = modal_outcome
+                    result["error"] = "Postcondition intentionally omitted while native modal UI was open."
+                    terminate_browser(platform_name, browser)
+                    driver = None
+                    return record
                 try:
                     after = snapshot(driver)
                     result["after"] = after
