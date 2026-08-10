@@ -26,8 +26,13 @@ on:
           - both
           - caret
           - selection
-      browsers:
-        description: all, or comma-separated browser IDs for the selected platform (safari,chrome,firefox,edge)
+      macos_browsers:
+        description: all, or a JSON array of macOS browser IDs (for example ["safari","firefox"])
+        required: true
+        default: all
+        type: string
+      windows_browsers:
+        description: all, or a JSON array of Windows browser IDs (for example ["chrome","firefox"])
         required: true
         default: all
         type: string
@@ -37,14 +42,14 @@ permissions:
 
 jobs:
   macos:
-    if: ${{ (inputs.platform == 'all' || inputs.platform == 'macos') && (inputs.browsers == 'all' || contains(format(',{0},', inputs.browsers), format(',{0},', matrix.browser))) }}
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'macos' }}
     name: macOS 26 / ${{ matrix.browser }}
     runs-on: macos-26
     timeout-minutes: 180
     strategy:
       fail-fast: false
       matrix:
-        browser: [safari, chrome, firefox]
+        browser: ${{ fromJSON(inputs.macos_browsers == 'all' && '["safari","chrome","firefox"]' || inputs.macos_browsers) }}
     env:
       COMBOS: ${{ inputs.combos }}
       STATES: ${{ inputs.states }}
@@ -115,14 +120,14 @@ jobs:
           if-no-files-found: error
 
   windows:
-    if: ${{ (inputs.platform == 'all' || inputs.platform == 'windows') && (inputs.browsers == 'all' || contains(format(',{0},', inputs.browsers), format(',{0},', matrix.browser))) }}
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'windows' }}
     name: Windows 11 ARM / ${{ matrix.browser }}
     runs-on: windows-11-arm
     timeout-minutes: 180
     strategy:
       fail-fast: false
       matrix:
-        browser: [chrome, edge, firefox]
+        browser: ${{ fromJSON(inputs.windows_browsers == 'all' && '["chrome","edge","firefox"]' || inputs.windows_browsers) }}
     env:
       COMBOS: ${{ inputs.combos }}
       STATES: ${{ inputs.states }}
