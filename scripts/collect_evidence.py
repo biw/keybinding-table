@@ -110,7 +110,17 @@ def table_combos(readme: Path) -> list[str]:
 def select_combos(all_combos: list[str], selection: str) -> list[str]:
     if selection.strip().lower() == "all":
         return all_combos
-    requested = [entry.strip() for entry in selection.split(",") if entry.strip()]
+    # Workflow input uses commas as its list separator, while the table also
+    # contains the literal comma key (`modifier→,`). Treat a separator-empty
+    # token following a modifier arrow as that key rather than silently
+    # narrowing the requested evidence matrix.
+    requested = []
+    for entry in selection.split(","):
+        normalized = entry.strip()
+        if normalized.endswith("→"):
+            requested.append(f"{normalized},")
+        elif normalized:
+            requested.append(normalized)
     unknown = sorted(set(requested) - set(all_combos))
     if unknown:
         raise RuntimeError(f"Unknown combo(s): {', '.join(unknown)}")
