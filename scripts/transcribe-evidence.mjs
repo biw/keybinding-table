@@ -228,10 +228,6 @@ function rowCombo(line) {
   return match ? (match[1] ?? `${match[2]}\``) : null;
 }
 
-function eventDelivered(record) {
-  return record.result?.after?.events?.some((event) => event.isTrusted && event.type === 'keydown') ?? false;
-}
-
 function quoted(value) {
   return `“${value.replaceAll('\n', '↵')}”`;
 }
@@ -254,9 +250,11 @@ function observedLabel(records) {
   }
   const changedRecord = records.find((record) => record.result.kind === 'observed');
   if (!changedRecord) {
-    return records.some(eventDelivered)
-      ? 'no effect (input)'
-      : 'no effect (input)';
+    // This table is an availability map for application authors. A chord that
+    // is delivered to the focused textarea without browser-owned behavior is
+    // open for the app to bind; the raw evidence retains the more literal
+    // "observed-no-effect" classification and its full postcondition.
+    return '🌳 open';
   }
   const before = changedRecord.result.before;
   const after = changedRecord.result.after;
@@ -286,6 +284,10 @@ function observedLabel(records) {
 
 function cite(text, source) {
   return `${text.replace(/\s*(?:〔[A-Z0-9-]+〕|<!-- source: [A-Z0-9-]+ -->)/g, '')}<!-- source: ${source} -->`;
+}
+
+function renderLabel(label) {
+  return label === '🌳 open' ? '**🌳 open**' : `\`${label}\``;
 }
 
 function alignTable(lines) {
@@ -320,12 +322,12 @@ const rewritten = lines.map((line) => {
     }
     const existing = cells[index + 2].trim();
     const source = documented?.source ?? (hasAllRecords && records.every((record) => record.result.kind === 'os-level') ? 'WIN-KEYBOARD' : column.source);
-    // Preserve the table's original inline-code/emphasis treatment. New
-    // observed values take the same inline-code form as legacy action labels.
-    const staleNoEffect = documentedLabel && /^`no effect \(input\)`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
+    // Preserve the table's original inline-code/emphasis treatment. An open
+    // chord is an availability result, so retain the table's bold tree marker.
+    const staleNoEffect = /^`no effect \(input\)`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
     const staleWindowsShell = /^`Windows shell`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
     const content = existing === '_unknown_' || staleNoEffect || staleWindowsShell
-      ? `\`${documentedLabel ?? observedLabel(records)}\``
+      ? renderLabel(documentedLabel ?? observedLabel(records))
       : existing;
     cells[index + 2] = ` ${cite(content, source)} `;
   }

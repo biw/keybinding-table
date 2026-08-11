@@ -13,5 +13,7 @@ node scripts/validate-evidence.mjs
 ```
 
 An `observed` result is only a fact for its stated browser build, OS build,
-U.S. keyboard layout, clean profile, and textarea focus state. `os-level`
-records are Windows-logo-key behavior; the browser receives no ownership claim.
+U.S. keyboard layout, clean profile, and textarea focus state. An
+`observed-no-effect` result becomes **🌳 open** in the table: the browser left
+the chord available for the focused app to bind. `os-level` records are
+Windows-logo-key behavior; the browser receives no ownership claim.
