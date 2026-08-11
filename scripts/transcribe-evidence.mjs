@@ -323,7 +323,7 @@ const rewritten = lines.map((line) => {
     // Preserve the table's original inline-code/emphasis treatment. New
     // observed values take the same inline-code form as legacy action labels.
     const staleNoEffect = documentedLabel && /^`no effect \(input\)`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
-    const staleWindowsShell = documentedLabel && /^`Windows shell`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
+    const staleWindowsShell = /^`Windows shell`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
     const content = existing === '_unknown_' || staleNoEffect || staleWindowsShell
       ? `\`${documentedLabel ?? observedLabel(records)}\``
       : existing;
