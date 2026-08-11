@@ -167,7 +167,9 @@ const rewritten = lines.map((line) => {
     }
     const existing = cells[index + 2].trim();
     const source = records.every((record) => record.result.kind === 'os-level') ? 'WIN-KEYBOARD' : column.source;
-    const content = existing === '_unknown_' ? observedLabel(records) : existing.replace(/^`|`$/g, '');
+    // Preserve the table's original inline-code/emphasis treatment. New
+    // observed values take the same inline-code form as legacy action labels.
+    const content = existing === '_unknown_' ? `\`${observedLabel(records)}\`` : existing;
     cells[index + 2] = ` ${cite(content, source)} `;
   }
   return cells.join('|');
