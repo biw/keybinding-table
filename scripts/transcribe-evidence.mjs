@@ -34,6 +34,33 @@ const documentedOutcomes = {
     'ctrl→h': 'history sidebar',
     'ctrl→i': 'page info',
     'ctrl→j': 'downloads',
+  },
+  'safari-macos': {
+    'meta→h': { label: 'hide Safari', source: 'MAC-KEYBOARD' },
+    'meta→l': 'select address bar',
+    'meta→n': { label: 'new window', source: 'MAC-KEYBOARD' },
+    'meta→o': { label: 'open file', source: 'MAC-KEYBOARD' },
+    'meta→p': 'print page',
+    'meta→q': { label: 'quit Safari', source: 'MAC-KEYBOARD' },
+    'meta→t': { label: 'new tab', source: 'MAC-KEYBOARD' },
+    'meta→w': 'close tab',
+    'meta→x': { label: 'cut', source: 'MAC-KEYBOARD' },
+    'meta→z': { label: 'undo', source: 'MAC-KEYBOARD' },
+    'meta→1': 'switch to tab 1',
+    'meta→2': 'switch to tab 2',
+    'meta→3': 'switch to tab 3',
+    'meta→4': 'switch to tab 4',
+    'meta→5': 'switch to tab 5',
+    'meta→6': 'switch to tab 6',
+    'meta→7': 'switch to tab 7',
+    'meta→8': 'switch to tab 8',
+    'meta→9': 'switch to last tab',
+    'meta→-': 'zoom out',
+    'meta→=': 'zoom in',
+    'meta→[': 'back',
+    'meta→]': 'forward',
+    'meta→,': 'Safari settings',
+    'meta→`': { label: 'switch Safari window', source: 'MAC-KEYBOARD' },
   }
 };
 
@@ -202,10 +229,12 @@ const rewritten = lines.map((line) => {
     }
     const existing = cells[index + 2].trim();
     const documented = documentedOutcomes[column.target]?.[combo];
-    const source = records.every((record) => record.result.kind === 'os-level') ? 'WIN-KEYBOARD' : column.source;
+    const documentedLabel = typeof documented === 'string' ? documented : documented?.label;
+    const source = records.every((record) => record.result.kind === 'os-level') ? 'WIN-KEYBOARD' : (documented?.source ?? column.source);
     // Preserve the table's original inline-code/emphasis treatment. New
     // observed values take the same inline-code form as legacy action labels.
-    const content = existing === '_unknown_' ? `\`${documented ?? observedLabel(records)}\`` : existing;
+    const staleNoEffect = documentedLabel && /^`no effect \(input\)`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
+    const content = existing === '_unknown_' || staleNoEffect ? `\`${documentedLabel ?? observedLabel(records)}\`` : existing;
     cells[index + 2] = ` ${cite(content, source)} `;
   }
   return cells.join('|');
