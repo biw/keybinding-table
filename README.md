@@ -6,18 +6,22 @@
 
 ## Evidence and scope
 
-This table is being migrated from historical entries to versioned evidence.
-Existing unmarked values are legacy observations, not newly verified facts.
-New or corrected cells retain their source IDs in the Markdown metadata; their
-URLs, retrieval dates, and caveats are in [SOURCES.md](SOURCES.md), while the
-corresponding versioned raw observations live in [evidence](evidence/README.md).
+This is an availability map for web-app authors. With a plain textarea focused:
 
-The canonical test baseline is a clean, policy-free browser profile with a U.S.
-keyboard layout and a focused plain textarea. On Windows, `meta` means the
-Windows-logo key: values in those rows are labeled as OS-level behavior rather
-than browser-owned shortcuts. **🌳 open** means the browser leaves the chord
-available for a focused web app to bind in this baseline. A missing
-documentation entry is never treated as proof that a chord is open.
+- **🌳 open** means the browser leaves the chord available for the app to bind.
+- Any other label describes the browser or operating-system behavior that claims
+  the chord instead.
+
+The baseline is a clean, policy-free browser profile with a U.S. keyboard
+layout. On Windows, `meta` means the Windows-logo key, so those results are
+OS-level behavior rather than browser shortcuts. Results apply to this focused
+input context; they do not promise the same behavior in every browser surface.
+
+New and corrected cells retain source IDs in the Markdown metadata. Their URLs,
+retrieval dates, and caveats are in [SOURCES.md](SOURCES.md); versioned raw
+observations live in [evidence](evidence/README.md). Unmarked values are legacy
+observations. A missing documentation entry is never treated as proof that a
+chord is open.
 
 | Key Combo        | Firefox MacOS                                           | Chromium macOS                                                                   | Safari macOS      | Firefox Windows | Chrome Windows | Edge (Chromium Based) Windows |
 | ---------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------- | --------------- | -------------- | ----------------------------- |
