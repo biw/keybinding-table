@@ -101,12 +101,12 @@ function textDelta(before, after) {
 
 function observedLabel(records) {
   if (records.every((record) => record.result.kind === 'os-level')) {
-    return 'OS-level Windows-logo shortcut (not browser-owned)';
+    return 'OS-level (Windows-logo)';
   }
   const changedRecord = records.find((record) => record.result.kind === 'observed');
   if (!changedRecord) {
     return records.some(eventDelivered)
-      ? 'textarea receives chord; no text, selection, focus, URL, or window change'
+      ? 'no effect in textarea'
       : 'no observable effect in focused textarea';
   }
   const before = changedRecord.result.before;
@@ -130,12 +130,25 @@ function observedLabel(records) {
   }
   if (before.activeElement !== after.activeElement) return `moves focus from textarea to ${after.activeElement ?? 'browser UI'}`;
   if (before.url !== after.url) return 'navigates away from the harness page';
-  if (before.windowHandles !== after.windowHandles) return 'changes browser window/tab state';
+  if (before.windowHandles !== after.windowHandles) return 'browser window/tab changed';
   return 'browser/UI state changed outside the textarea';
 }
 
 function cite(text, source) {
   return `${text.replace(/\s*〔[A-Z0-9-]+〕/g, '')} 〔${source}〕`;
+}
+
+function alignTable(lines) {
+  const begin = lines.findIndex((line) => line.startsWith('| Key Combo'));
+  let end = begin + 2;
+  while (end < lines.length && lines[end].startsWith('|')) end += 1;
+  const rows = lines.slice(begin, end).map((line) => line.split('|').slice(1, -1).map((cell) => cell.trim()));
+  const widths = rows[0].map((_, column) => Math.max(...rows.map((row) => row[column].length)));
+  const table = rows.map((row, rowIndex) => `| ${row.map((cell, column) => (
+    rowIndex === 1 ? '-'.repeat(widths[column]) : cell.padEnd(widths[column])
+  )).join(' | ')} |`);
+  lines.splice(begin, end - begin, ...table);
+  return lines;
 }
 
 const lines = readme.split('\n');
@@ -165,7 +178,7 @@ if (missing.length && !allowPartial) {
 
 const targetOrder = new Map(targetColumns.map((column, index) => [column.target, index]));
 observations.sort((left, right) => [left.combo, targetOrder.get(left.target), left.state].join('|').localeCompare([right.combo, targetOrder.get(right.target), right.state].join('|')));
-await writeFile(readmePath, `${rewritten.join('\n').replace(/\n+$/, '')}\n`, 'utf8');
+await writeFile(readmePath, `${alignTable(rewritten).join('\n').replace(/\n+$/, '')}\n`, 'utf8');
 await writeFile(evidencePath, `${JSON.stringify({
   schemaVersion: 1,
   metadata: {
