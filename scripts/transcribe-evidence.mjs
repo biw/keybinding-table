@@ -101,13 +101,13 @@ function textDelta(before, after) {
 
 function observedLabel(records) {
   if (records.every((record) => record.result.kind === 'os-level')) {
-    return 'OS-level (Windows-logo)';
+    return 'Windows shell';
   }
   const changedRecord = records.find((record) => record.result.kind === 'observed');
   if (!changedRecord) {
     return records.some(eventDelivered)
       ? 'no effect in textarea'
-      : 'no observable effect in focused textarea';
+      : 'no effect (textarea)';
   }
   const before = changedRecord.result.before;
   const after = changedRecord.result.after;
@@ -135,7 +135,7 @@ function observedLabel(records) {
 }
 
 function cite(text, source) {
-  return `${text.replace(/\s*〔[A-Z0-9-]+〕/g, '')} 〔${source}〕`;
+  return `${text.replace(/\s*(?:〔[A-Z0-9-]+〕|<!-- source: [A-Z0-9-]+ -->)/g, '')}<!-- source: ${source} -->`;
 }
 
 function alignTable(lines) {
