@@ -134,6 +134,7 @@ function observedLabel(records) {
     return `select ${after.selectionStart}–${after.selectionEnd}`;
   }
   if (before.activeElement !== after.activeElement) return `moves focus from textarea to ${after.activeElement ?? 'browser UI'}`;
+  if (before.appState?.isHidden !== after.appState?.isHidden && after.appState?.isHidden) return 'hide Safari';
   if (before.url !== after.url) return 'navigates away from the harness page';
   if (before.windowHandles !== after.windowHandles) return 'window/tab changed';
   return 'browser UI changed';

@@ -529,6 +529,15 @@ def focus_macos_textarea(injector: Path, bundle: str, driver) -> dict[str, int]:
     return {"x": x, "y": y}
 
 
+def macos_app_state(injector: Path, bundle: str) -> dict[str, Any]:
+    """Read visibility directly from NSRunningApplication, outside the DOM."""
+    result = run([str(injector), "--bundle", bundle, "--state"])
+    if result.returncode != 0:
+        message = result.stderr.strip() or result.stdout.strip() or "unknown macOS state failure"
+        raise RuntimeError(message)
+    return json.loads(result.stdout)
+
+
 def browser_version(capabilities: dict[str, Any]) -> str:
     value = capabilities.get("browserVersion") or capabilities.get("version")
     return str(value) if value else "unavailable"
@@ -544,15 +553,19 @@ def terminate_browser(platform_name: str, browser: str) -> None:
     run(["pkill", "-x", name])
 
 
-def snapshot(driver) -> dict[str, Any]:
+def snapshot(driver, platform_name: str, mac_injector: Path | None = None, bundle: str | None = None) -> dict[str, Any]:
     state = driver.execute_script("return window.__keybindingEvidence.snapshot()")
     state["url"] = driver.current_url
     state["windowHandles"] = len(driver.window_handles)
+    if platform_name == "macos":
+        if mac_injector is None or bundle is None:
+            raise RuntimeError("macOS app-state snapshot requires the native injector and bundle ID")
+        state["appState"] = macos_app_state(mac_injector, bundle)
     return state
 
 
 def changed(before: dict[str, Any], after: dict[str, Any]) -> bool:
-    for key in ("value", "selectionStart", "selectionEnd", "scrollTop", "activeElement", "url", "windowHandles"):
+    for key in ("value", "selectionStart", "selectionEnd", "scrollTop", "activeElement", "url", "windowHandles", "appState"):
         if before.get(key) != after.get(key):
             return True
     return False
@@ -642,7 +655,7 @@ def observation_for_case(
             driver.execute_script("window.__keybindingEvidence.setState(arguments[0])", state)
             time.sleep(0.2)
             environment["browserVersion"] = browser_version(driver.capabilities)
-            before = snapshot(driver)
+            before = snapshot(driver, platform_name, mac_injector, target.get("bundle"))
             result["before"] = before
 
             if platform_name == "windows" and combo.startswith("meta→"):
@@ -672,7 +685,7 @@ def observation_for_case(
                     driver = None
                     return record
                 try:
-                    after = snapshot(driver)
+                    after = snapshot(driver, platform_name, mac_injector, target.get("bundle"))
                     result["after"] = after
                     if changed(before, after):
                         result["kind"] = "observed"

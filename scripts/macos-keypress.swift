@@ -10,7 +10,7 @@ enum KeypressError: Error, LocalizedError {
   var errorDescription: String? {
     switch self {
     case .usage:
-      return "Usage: macos-keypress --bundle <bundle-id> (--activate | --click <x,y> | --combo <modifier→key>)"
+      return "Usage: macos-keypress --bundle <bundle-id> (--activate | --click <x,y> | --state | --combo <modifier→key>)"
     case let .unsupportedCombo(combo):
       return "Unsupported U.S. ANSI combo: \(combo)"
     case let .applicationNotFound(bundle):
@@ -54,6 +54,17 @@ do {
   }
   guard let application = NSRunningApplication.runningApplications(withBundleIdentifier: bundle).first else {
     throw KeypressError.applicationNotFound(bundle)
+  }
+
+  if CommandLine.arguments.contains("--state") {
+    let state: [String: Any] = [
+      "isActive": application.isActive,
+      "isHidden": application.isHidden,
+      "processIdentifier": application.processIdentifier
+    ]
+    let data = try JSONSerialization.data(withJSONObject: state, options: [.sortedKeys])
+    FileHandle.standardOutput.write(data)
+    exit(0)
   }
 
   if CommandLine.arguments.contains("--activate") {
