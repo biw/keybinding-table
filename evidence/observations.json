@@ -9,12 +9,13 @@
       "https://github.com/biw/keybinding-table/actions/runs/31443779781",
       "https://github.com/biw/keybinding-table/actions/runs/31444107322",
       "https://github.com/biw/keybinding-table/actions/runs/31446239777",
-      "https://github.com/biw/keybinding-table/actions/runs/31446241539"
+      "https://github.com/biw/keybinding-table/actions/runs/31446241539",
+      "https://github.com/biw/keybinding-table/actions/runs/31446618883"
     ],
     "completeMatrix": false,
     "inputLayout": "U.S.",
     "cleanProfile": true,
-    "transcribedAt": "2026-08-11T00:35:34.895Z"
+    "transcribedAt": "2026-08-11T00:39:53.069Z"
   },
   "observations": [
     {
@@ -117592,8 +117593,13 @@
             }
           ],
           "scrollTop": 0,
-          "url": "http://127.0.0.1:49195/textarea.html",
-          "windowHandles": 1
+          "url": "http://127.0.0.1:49200/textarea.html",
+          "windowHandles": 1,
+          "appState": {
+            "isActive": true,
+            "isHidden": false,
+            "processIdentifier": 33039
+          }
         },
         "after": {
           "selectionStart": 8,
@@ -117617,8 +117623,13 @@
             }
           ],
           "scrollTop": 0,
-          "url": "http://127.0.0.1:49195/textarea.html",
-          "windowHandles": 1
+          "url": "http://127.0.0.1:49200/textarea.html",
+          "windowHandles": 1,
+          "appState": {
+            "isActive": true,
+            "isHidden": false,
+            "processIdentifier": 33039
+          }
         },
         "error": null,
         "nativePointerFocus": {
@@ -117637,8 +117648,8 @@
       "sources": [
         "SAFARI-KEYBOARD"
       ],
-      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31446239777 (keybinding-evidence-macos-safari)",
-      "capturedAt": "2026-08-11T00:32:40Z"
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31446618883 (keybinding-evidence-macos-safari)",
+      "capturedAt": "2026-08-11T00:38:44Z"
     },
     {
       "combo": "meta→h",
@@ -117669,8 +117680,13 @@
             }
           ],
           "scrollTop": 0,
-          "url": "http://127.0.0.1:49195/textarea.html",
-          "windowHandles": 1
+          "url": "http://127.0.0.1:49200/textarea.html",
+          "windowHandles": 1,
+          "appState": {
+            "isActive": true,
+            "isHidden": false,
+            "processIdentifier": 33425
+          }
         },
         "after": {
           "selectionStart": 6,
@@ -117694,8 +117710,13 @@
             }
           ],
           "scrollTop": 0,
-          "url": "http://127.0.0.1:49195/textarea.html",
-          "windowHandles": 1
+          "url": "http://127.0.0.1:49200/textarea.html",
+          "windowHandles": 1,
+          "appState": {
+            "isActive": true,
+            "isHidden": false,
+            "processIdentifier": 33425
+          }
         },
         "error": null,
         "nativePointerFocus": {
@@ -117714,8 +117735,8 @@
       "sources": [
         "SAFARI-KEYBOARD"
       ],
-      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31446239777 (keybinding-evidence-macos-safari)",
-      "capturedAt": "2026-08-11T00:32:54Z"
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31446618883 (keybinding-evidence-macos-safari)",
+      "capturedAt": "2026-08-11T00:38:59Z"
     },
     {
       "combo": "meta→h",
