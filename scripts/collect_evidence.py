@@ -76,6 +76,14 @@ WINDOWS_SCAN_CODES = {
     "'": 0x28, "`": 0x29, ",": 0x33, ".": 0x34, "/": 0x35,
 }
 WINDOWS_MODIFIER_SCAN_CODES = {"ctrl": 0x1D, "alt": 0x38, "meta": 0x5B}
+# These four Windows-logo-key chords have no default action in Microsoft's
+# shortcut register. They are safe to measure directly: unlike the documented
+# logo-key chords, none locks the session, changes power/display state, opens
+# an application, or captures screen content. Testing them tells us whether
+# the actual browser receives the chord on the versioned runner.
+SAFE_WINDOWS_META_RUNTIME_COMBOS = frozenset({
+    "meta→[", "meta→]", "meta→'", "meta→`"
+})
 NATIVE_MODAL_OUTCOMES = {
     ("macos", "meta→o"): "opens file chooser",
     ("macos", "meta→p"): "opens print dialog",
@@ -654,7 +662,8 @@ def observation_for_case(
                 result["nativePointerFocus"] = focus_macos_textarea(mac_injector, target["bundle"], driver)
             # Preserve Chromium's renderer focus, then foreground its browser
             # window without directing focus to the top-level native frame.
-            if platform_name == "windows" and not combo.startswith("meta→"):
+            inject_safe_windows_meta = combo in SAFE_WINDOWS_META_RUNTIME_COMBOS
+            if platform_name == "windows" and (not combo.startswith("meta→") or inject_safe_windows_meta):
                 result["foregroundWindow"] = activate_windows_browser(driver.title)
                 result["nativePointerFocus"] = focus_windows_textarea(driver)
                 # SendInput is asynchronous relative to the WebDriver control
@@ -669,7 +678,7 @@ def observation_for_case(
             before = snapshot(driver, platform_name, mac_injector, target.get("bundle"))
             result["before"] = before
 
-            if platform_name == "windows" and combo.startswith("meta→"):
+            if platform_name == "windows" and combo.startswith("meta→") and not inject_safe_windows_meta:
                 result["kind"] = "os-level"
                 result["summary"] = "Windows-logo shortcut was not injected; its OS-level behavior is sourced from WIN-KEYBOARD."
                 result["after"] = before

@@ -94,6 +94,64 @@ const documentedOutcomes = {
   }
 };
 
+// Windows-logo-key chords are owned by Windows before a browser can process
+// them.  We intentionally do not inject the session-changing ones (for
+// example, Win+L) in the runner; instead their precise default behavior comes
+// from Microsoft's Windows-key shortcut reference.  Entries absent from this
+// register remain unresolved rather than being misrepresented as no-ops.
+const windowsShellOutcomes = {
+  'meta→a': 'open Action Center',
+  'meta→b': 'focus first notification-area icon',
+  'meta→c': 'open Copilot',
+  'meta→d': 'show/hide desktop',
+  'meta→e': 'open File Explorer',
+  'meta→f': 'open Feedback Hub',
+  'meta→g': 'open Game Bar',
+  'meta→h': 'open voice dictation',
+  'meta→i': 'open Settings',
+  'meta→j': 'open Recall (supported PCs)',
+  'meta→k': 'open Cast',
+  'meta→l': 'lock computer',
+  'meta→m': 'minimize all windows',
+  'meta→n': 'open notification center and calendar',
+  'meta→o': 'lock device orientation',
+  'meta→p': 'open project settings',
+  'meta→q': 'open Search',
+  'meta→r': 'open Run dialog',
+  'meta→s': 'open Search',
+  'meta→t': 'cycle taskbar apps',
+  'meta→u': 'open Accessibility settings',
+  'meta→v': 'open clipboard history',
+  'meta→w': 'open Widgets',
+  'meta→x': 'open Quick Link menu',
+  'meta→y': 'switch Mixed Reality/desktop input',
+  'meta→z': 'open snap layouts',
+  'meta→0': 'open/switch taskbar app 0',
+  'meta→1': 'open/switch taskbar app 1',
+  'meta→2': 'open/switch taskbar app 2',
+  'meta→3': 'open/switch taskbar app 3',
+  'meta→4': 'open/switch taskbar app 4',
+  'meta→5': 'open/switch taskbar app 5',
+  'meta→6': 'open/switch taskbar app 6',
+  'meta→7': 'open/switch taskbar app 7',
+  'meta→8': 'open/switch taskbar app 8',
+  'meta→9': 'open/switch taskbar app 9',
+  'meta→-': 'zoom out in Magnifier',
+  'meta→=': 'zoom in with Magnifier',
+  'meta→;': 'open emoji panel',
+  'meta→,': 'peek at desktop',
+  'meta→.': 'open emoji panel',
+  'meta→/': 'start IME reconversion'
+};
+
+function documentedOutcome(target, combo) {
+  if (target.endsWith('-windows') && combo.startsWith('meta→')) {
+    const label = windowsShellOutcomes[combo];
+    return label ? { label, source: 'WIN-KEYBOARD' } : undefined;
+  }
+  return documentedOutcomes[target]?.[combo];
+}
+
 function usage() {
   console.error('usage: transcribe-evidence.mjs [--allow-partial] [--existing evidence/observations.json] [--render-existing] --artifact <run URL> observation.json [...]');
   process.exit(2);
@@ -192,7 +250,7 @@ function textDelta(before, after) {
 
 function observedLabel(records) {
   if (records.every((record) => record.result.kind === 'os-level')) {
-    return 'Windows shell';
+    return 'OS-level behavior';
   }
   const changedRecord = records.find((record) => record.result.kind === 'observed');
   if (!changedRecord) {
@@ -253,18 +311,22 @@ const rewritten = lines.map((line) => {
   for (let index = 0; index < targetColumns.length; index += 1) {
     const column = targetColumns[index];
     const records = ['textarea-caret', 'textarea-selection'].map((state) => byKey.get([combo, column.target, state].join('|')));
-    if (records.some((record) => !record)) {
+    const documented = documentedOutcome(column.target, combo);
+    const documentedLabel = typeof documented === 'string' ? documented : documented?.label;
+    const hasAllRecords = records.every((record) => record);
+    if (!hasAllRecords && !documentedLabel) {
       missing.push(`${combo}/${column.target}`);
       continue;
     }
     const existing = cells[index + 2].trim();
-    const documented = documentedOutcomes[column.target]?.[combo];
-    const documentedLabel = typeof documented === 'string' ? documented : documented?.label;
-    const source = records.every((record) => record.result.kind === 'os-level') ? 'WIN-KEYBOARD' : (documented?.source ?? column.source);
+    const source = documented?.source ?? (hasAllRecords && records.every((record) => record.result.kind === 'os-level') ? 'WIN-KEYBOARD' : column.source);
     // Preserve the table's original inline-code/emphasis treatment. New
     // observed values take the same inline-code form as legacy action labels.
     const staleNoEffect = documentedLabel && /^`no effect \(input\)`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
-    const content = existing === '_unknown_' || staleNoEffect ? `\`${documentedLabel ?? observedLabel(records)}\`` : existing;
+    const staleWindowsShell = documentedLabel && /^`Windows shell`(?:<!-- source: [A-Z0-9-]+ -->)?$/.test(existing);
+    const content = existing === '_unknown_' || staleNoEffect || staleWindowsShell
+      ? `\`${documentedLabel ?? observedLabel(records)}\``
+      : existing;
     cells[index + 2] = ` ${cite(content, source)} `;
   }
   return cells.join('|');
