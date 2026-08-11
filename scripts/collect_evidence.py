@@ -646,12 +646,13 @@ def observation_for_case(
             # window without directing focus to the top-level native frame.
             if platform_name == "windows" and not combo.startswith("meta→"):
                 result["foregroundWindow"] = activate_windows_browser(driver.title)
-                if browser in {"chrome", "edge"}:
-                    result["nativePointerFocus"] = focus_windows_textarea(driver)
-                    # SendInput is asynchronous relative to the WebDriver
-                    # control channel. Let the real click settle before the
-                    # passive harness resets its sentinel state.
-                    time.sleep(0.2)
+                result["nativePointerFocus"] = focus_windows_textarea(driver)
+                # SendInput is asynchronous relative to the WebDriver control
+                # channel. Let the real click settle before the passive
+                # harness resets its sentinel state. Firefox needs this native
+                # pointer focus too: foregrounding its top-level window alone
+                # does not direct keyboard input to the renderer on ARM hosts.
+                time.sleep(0.2)
             driver.execute_script("window.__keybindingEvidence.setState(arguments[0])", state)
             time.sleep(0.2)
             environment["browserVersion"] = browser_version(driver.capabilities)
