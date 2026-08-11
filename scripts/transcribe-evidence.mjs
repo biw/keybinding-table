@@ -20,16 +20,21 @@ const targetColumns = [
 ];
 
 function usage() {
-  console.error('usage: transcribe-evidence.mjs [--existing evidence/observations.json] --artifact <run URL> observation.json [...] [--artifact <run URL> observation.json ...]');
+  console.error('usage: transcribe-evidence.mjs [--allow-partial] [--existing evidence/observations.json] [--render-existing] --artifact <run URL> observation.json [...]');
   process.exit(2);
 }
 
 let currentArtifact;
 let existingPath;
+let renderExisting = false;
 const inputs = [];
 const allowPartial = process.argv.includes('--allow-partial');
 for (let index = 2; index < process.argv.length; index += 1) {
   if (process.argv[index] === '--allow-partial') continue;
+  if (process.argv[index] === '--render-existing') {
+    renderExisting = true;
+    continue;
+  }
   if (process.argv[index] === '--existing') {
     existingPath = process.argv[index + 1];
     if (!existingPath) usage();
@@ -45,7 +50,7 @@ for (let index = 2; index < process.argv.length; index += 1) {
   if (!currentArtifact) usage();
   inputs.push({ path: process.argv[index], artifact: currentArtifact });
 }
-if (!inputs.length) usage();
+if (!inputs.length && !existingPath) usage();
 
 const documents = await Promise.all(inputs.map(async ({ path, artifact }) => ({
   artifact,
@@ -53,7 +58,7 @@ const documents = await Promise.all(inputs.map(async ({ path, artifact }) => ({
 })));
 const existingDocument = existingPath ? JSON.parse(await readFile(existingPath, 'utf8')) : null;
 const observations = [
-  ...(existingDocument?.observations ?? []),
+  ...(renderExisting ? (existingDocument?.observations ?? []) : []),
   ...documents.flatMap(({ document, artifact }) => (document.observations ?? []).map((observation) => ({
   ...observation,
   artifact: `${artifact} (${observation.artifact})`
@@ -106,8 +111,8 @@ function observedLabel(records) {
   const changedRecord = records.find((record) => record.result.kind === 'observed');
   if (!changedRecord) {
     return records.some(eventDelivered)
-      ? 'no effect in textarea'
-      : 'no effect (textarea)';
+      ? 'no effect (input)'
+      : 'no effect (input)';
   }
   const before = changedRecord.result.before;
   const after = changedRecord.result.after;
@@ -124,14 +129,14 @@ function observedLabel(records) {
     return `replaces ${quoted(delta.removed)} with ${quoted(delta.inserted)} at textarea offset ${delta.start}`;
   }
   if (before.selectionStart !== after.selectionStart || before.selectionEnd !== after.selectionEnd) {
-    if (after.selectionStart === 0 && after.selectionEnd === after.value.length) return 'selects all textarea text';
-    if (after.selectionStart === after.selectionEnd) return `moves textarea caret to offset ${after.selectionStart}`;
-    return `selects textarea offsets ${after.selectionStart}–${after.selectionEnd}`;
+    if (after.selectionStart === 0 && after.selectionEnd === after.value.length) return 'select all (input)';
+    if (after.selectionStart === after.selectionEnd) return `caret → ${after.selectionStart}`;
+    return `select ${after.selectionStart}–${after.selectionEnd}`;
   }
   if (before.activeElement !== after.activeElement) return `moves focus from textarea to ${after.activeElement ?? 'browser UI'}`;
   if (before.url !== after.url) return 'navigates away from the harness page';
-  if (before.windowHandles !== after.windowHandles) return 'browser window/tab changed';
-  return 'browser/UI state changed outside the textarea';
+  if (before.windowHandles !== after.windowHandles) return 'window/tab changed';
+  return 'browser UI changed';
 }
 
 function cite(text, source) {
@@ -180,7 +185,8 @@ if (missing.length && !allowPartial) {
 
 const targetOrder = new Map(targetColumns.map((column, index) => [column.target, index]));
 observations.sort((left, right) => [left.combo, targetOrder.get(left.target), left.state].join('|').localeCompare([right.combo, targetOrder.get(right.target), right.state].join('|')));
-await writeFile(readmePath, `${alignTable(rewritten).join('\n').replace(/\n+$/, '')}\n`, 'utf8');
+// Preserve the established Markdown layout rather than reformatting the table.
+await writeFile(readmePath, `${rewritten.join('\n').replace(/\n+$/, '')}\n`, 'utf8');
 await writeFile(evidencePath, `${JSON.stringify({
   schemaVersion: 1,
   metadata: {
