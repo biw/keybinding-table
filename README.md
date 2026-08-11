@@ -1,5 +1,7 @@
 # keybinding-table
 
+Last updated: 2026-08-11
+
 - The `meta` key is the `cmd` key on macOS and the `windows` key on Windows
 - The `alt` key is the `option` key on macOS and the `alt` key on Windows
 - All testing for `(in input)` is done in a textarea without any event trigger overwrites (i.e. not the github editor)
