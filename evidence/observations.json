@@ -7,12 +7,13 @@
       "https://github.com/biw/keybinding-table/actions/runs/31442800415",
       "https://github.com/biw/keybinding-table/actions/runs/31443125306",
       "https://github.com/biw/keybinding-table/actions/runs/31443779781",
-      "https://github.com/biw/keybinding-table/actions/runs/31444107322"
+      "https://github.com/biw/keybinding-table/actions/runs/31444107322",
+      "https://github.com/biw/keybinding-table/actions/runs/31446239777"
     ],
     "completeMatrix": false,
     "inputLayout": "U.S.",
     "cleanProfile": true,
-    "transcribedAt": "2026-08-11T00:28:58.845Z"
+    "transcribedAt": "2026-08-11T00:34:01.222Z"
   },
   "observations": [
     {
@@ -117560,6 +117561,160 @@
       ],
       "artifact": "https://github.com/biw/keybinding-table/actions/runs/31433666214 (keybinding-evidence-macos-chrome)",
       "capturedAt": "2026-08-10T21:27:29Z"
+    },
+    {
+      "combo": "meta→h",
+      "target": "safari-macos",
+      "state": "textarea-caret",
+      "result": {
+        "kind": "observed-no-effect",
+        "summary": "No textarea, focus, URL, or window-count change was observed after real OS input.",
+        "before": {
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "activeElement": "target",
+          "selectionEnd": 8,
+          "events": [
+            {
+              "ctrlKey": false,
+              "altKey": false,
+              "type": "selectionchange",
+              "key": null,
+              "code": null,
+              "inputType": null,
+              "data": null,
+              "target": "target",
+              "shiftKey": false,
+              "metaKey": false,
+              "isTrusted": true,
+              "defaultPrevented": false
+            }
+          ],
+          "scrollTop": 0,
+          "url": "http://127.0.0.1:49195/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "selectionStart": 8,
+          "value": "first line\nsecond line\nthird line",
+          "activeElement": "target",
+          "selectionEnd": 8,
+          "events": [
+            {
+              "ctrlKey": false,
+              "altKey": false,
+              "type": "selectionchange",
+              "key": null,
+              "code": null,
+              "inputType": null,
+              "data": null,
+              "target": "target",
+              "shiftKey": false,
+              "metaKey": false,
+              "isTrusted": true,
+              "defaultPrevented": false
+            }
+          ],
+          "scrollTop": 0,
+          "url": "http://127.0.0.1:49195/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null,
+        "nativePointerFocus": {
+          "x": 422,
+          "y": 323
+        }
+      },
+      "environment": {
+        "browser": "Safari",
+        "browserVersion": "26.5.2",
+        "os": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+        "runnerImage": "macos26/20260728.0273.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "SAFARI-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31446239777 (keybinding-evidence-macos-safari)",
+      "capturedAt": "2026-08-11T00:32:40Z"
+    },
+    {
+      "combo": "meta→h",
+      "target": "safari-macos",
+      "state": "textarea-selection",
+      "result": {
+        "kind": "observed-no-effect",
+        "summary": "No textarea, focus, URL, or window-count change was observed after real OS input.",
+        "before": {
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "activeElement": "target",
+          "selectionEnd": 17,
+          "events": [
+            {
+              "ctrlKey": false,
+              "altKey": false,
+              "type": "selectionchange",
+              "key": null,
+              "code": null,
+              "inputType": null,
+              "data": null,
+              "target": "target",
+              "shiftKey": false,
+              "metaKey": false,
+              "isTrusted": true,
+              "defaultPrevented": false
+            }
+          ],
+          "scrollTop": 0,
+          "url": "http://127.0.0.1:49195/textarea.html",
+          "windowHandles": 1
+        },
+        "after": {
+          "selectionStart": 6,
+          "value": "first line\nsecond line\nthird line",
+          "activeElement": "target",
+          "selectionEnd": 17,
+          "events": [
+            {
+              "ctrlKey": false,
+              "altKey": false,
+              "type": "selectionchange",
+              "key": null,
+              "code": null,
+              "inputType": null,
+              "data": null,
+              "target": "target",
+              "shiftKey": false,
+              "metaKey": false,
+              "isTrusted": true,
+              "defaultPrevented": false
+            }
+          ],
+          "scrollTop": 0,
+          "url": "http://127.0.0.1:49195/textarea.html",
+          "windowHandles": 1
+        },
+        "error": null,
+        "nativePointerFocus": {
+          "x": 398,
+          "y": 323
+        }
+      },
+      "environment": {
+        "browser": "Safari",
+        "browserVersion": "26.5.2",
+        "os": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+        "runnerImage": "macos26/20260728.0273.1",
+        "inputLayout": "U.S.",
+        "cleanProfile": true
+      },
+      "sources": [
+        "SAFARI-KEYBOARD"
+      ],
+      "artifact": "https://github.com/biw/keybinding-table/actions/runs/31446239777 (keybinding-evidence-macos-safari)",
+      "capturedAt": "2026-08-11T00:32:54Z"
     },
     {
       "combo": "meta→h",

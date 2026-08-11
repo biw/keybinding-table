@@ -50,7 +50,7 @@ for (let index = 2; index < process.argv.length; index += 1) {
   if (!currentArtifact) usage();
   inputs.push({ path: process.argv[index], artifact: currentArtifact });
 }
-if (!inputs.length && !existingPath) usage();
+if (!inputs.length && !renderExisting) usage();
 
 const documents = await Promise.all(inputs.map(async ({ path, artifact }) => ({
   artifact,
@@ -58,7 +58,7 @@ const documents = await Promise.all(inputs.map(async ({ path, artifact }) => ({
 })));
 const existingDocument = existingPath ? JSON.parse(await readFile(existingPath, 'utf8')) : null;
 const observations = [
-  ...(renderExisting ? (existingDocument?.observations ?? []) : []),
+  ...(existingDocument?.observations ?? []),
   ...documents.flatMap(({ document, artifact }) => (document.observations ?? []).map((observation) => ({
   ...observation,
   artifact: `${artifact} (${observation.artifact})`
