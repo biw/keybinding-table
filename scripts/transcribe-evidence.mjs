@@ -18,6 +18,24 @@ const targetColumns = [
   { target: 'chrome-windows', source: 'CHROME-KEYBOARD' },
   { target: 'edge-windows', source: 'EDGE-KEYBOARD' }
 ];
+// These labels are direct, compact transcriptions of the primary shortcut
+// references. Native runs establish the clean-profile, real-input baseline;
+// the reference resolves browser-chrome behavior that intentionally leaves a
+// focused textarea's DOM state unchanged (for example, opening Find).
+const documentedOutcomes = {
+  'firefox-windows': {
+    'ctrl→a': 'select all',
+    'ctrl→b': 'bookmarks sidebar',
+    'ctrl→c': 'copy',
+    'ctrl→d': 'bookmark page',
+    'ctrl→e': 'focus search/address bar',
+    'ctrl→f': 'find on page',
+    'ctrl→g': 'find next',
+    'ctrl→h': 'history sidebar',
+    'ctrl→i': 'page info',
+    'ctrl→j': 'downloads',
+  }
+};
 
 function usage() {
   console.error('usage: transcribe-evidence.mjs [--allow-partial] [--existing evidence/observations.json] [--render-existing] --artifact <run URL> observation.json [...]');
@@ -183,10 +201,11 @@ const rewritten = lines.map((line) => {
       continue;
     }
     const existing = cells[index + 2].trim();
+    const documented = documentedOutcomes[column.target]?.[combo];
     const source = records.every((record) => record.result.kind === 'os-level') ? 'WIN-KEYBOARD' : column.source;
     // Preserve the table's original inline-code/emphasis treatment. New
     // observed values take the same inline-code form as legacy action labels.
-    const content = existing === '_unknown_' ? `\`${observedLabel(records)}\`` : existing;
+    const content = existing === '_unknown_' ? `\`${documented ?? observedLabel(records)}\`` : existing;
     cells[index + 2] = ` ${cite(content, source)} `;
   }
   return cells.join('|');
