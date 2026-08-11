@@ -259,11 +259,18 @@ def send_windows_key_events(events: list[tuple[int, bool]], *, scan_codes: bool 
         _fields_ = [("type", ctypes.c_ulong), ("union", INPUT_UNION)]
 
     INPUT_KEYBOARD = 1
+    KEYEVENTF_EXTENDEDKEY = 0x0001
     KEYEVENTF_KEYUP = 0x0002
     KEYEVENTF_SCANCODE = 0x0008
 
     def event(code: int, key_up: bool = False) -> INPUT:
         flags = (KEYEVENTF_KEYUP if key_up else 0) | (KEYEVENTF_SCANCODE if scan_codes else 0)
+        # The physical left Windows key is an extended scan code. Without
+        # this bit, Windows routes scan code 0x5B as an unidentified ordinary
+        # key and the following punctuation is typed bare rather than as a
+        # Windows-logo-key chord.
+        if scan_codes and code == WINDOWS_MODIFIER_SCAN_CODES["meta"]:
+            flags |= KEYEVENTF_EXTENDEDKEY
         return INPUT(
             type=INPUT_KEYBOARD,
             ki=KEYBDINPUT(
