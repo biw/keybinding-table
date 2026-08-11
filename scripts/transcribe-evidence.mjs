@@ -57,12 +57,23 @@ const documents = await Promise.all(inputs.map(async ({ path, artifact }) => ({
   document: JSON.parse(await readFile(path, 'utf8'))
 })));
 const existingDocument = existingPath ? JSON.parse(await readFile(existingPath, 'utf8')) : null;
-const observations = [
-  ...(existingDocument?.observations ?? []),
-  ...documents.flatMap(({ document, artifact }) => (document.observations ?? []).map((observation) => ({
+const incomingObservations = documents.flatMap(({ document, artifact }) => (document.observations ?? []).map((observation) => ({
   ...observation,
   artifact: `${artifact} (${observation.artifact})`
-})))
+})));
+const observationKey = (observation) => [observation.combo, observation.target, observation.state].join('|');
+const incomingKeys = new Set();
+for (const observation of incomingObservations) {
+  const key = observationKey(observation);
+  if (incomingKeys.has(key)) throw new Error(`Duplicate incoming observation: ${key}`);
+  incomingKeys.add(key);
+}
+// A later isolated run may deliberately supersede a previous measurement of
+// the same case (for example, after adding a new OS-state probe). Keep the
+// new versioned record and leave unrelated historical observations intact.
+const observations = [
+  ...(existingDocument?.observations ?? []).filter((observation) => !incomingKeys.has(observationKey(observation))),
+  ...incomingObservations
 ];
 if (!observations.length) throw new Error('No observations were supplied.');
 const failures = observations.filter((observation) => observation.result?.kind === 'injector-failure');
@@ -70,7 +81,7 @@ if (failures.length) throw new Error(`Refusing to transcribe ${failures.length} 
 
 const byKey = new Map();
 for (const observation of observations) {
-  const key = [observation.combo, observation.target, observation.state].join('|');
+  const key = observationKey(observation);
   if (byKey.has(key)) throw new Error(`Duplicate observation: ${key}`);
   byKey.set(key, observation);
 }
